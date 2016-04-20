@@ -33,12 +33,22 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+    view: 'tracker'
   },
 
   '/test': {
-    controller: 'hoge',
+    controller: 'ticket',
     action: 'findtwo'
+  },
+
+  '/tracker': {
+    controller: 'ticket',
+    action: 'tracker'
+  },
+
+  '/activity': {
+    controller: 'time',
+    action: 'activity'
   },
 
   /***************************************************************************

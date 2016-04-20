@@ -15,6 +15,7 @@
         "!./node_modules/"
     ],
     "files": [
-        "./api/controllers/HogeController.ts"
+        "./api/controllers/TicketController.ts",
+        "./api/controllers/TimeController.ts"
     ]
 }
