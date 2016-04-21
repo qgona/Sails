@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-  grunt.registerTask('build-server', [
+  grunt.registerTask('bs', [
     'tsconfig:main',
     'shell:typescript'
   ]);

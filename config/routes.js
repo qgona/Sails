@@ -51,6 +51,9 @@ module.exports.routes = {
     action: 'activity'
   },
 
+  '/stacked': {
+    view: 'stacked'
+  },
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
