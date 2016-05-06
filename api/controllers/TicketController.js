@@ -73,8 +73,13 @@ var TicketController = (function () {
                 {
                     $group: {
                         _id: "$testver",
-                        "count": { $sum: 1 },
-                        "time": { $sum: "$time" }
+                        "count": { $sum: 1 }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$id",
+                        "count": { $sum: 1 }
                     }
                 }
             ], function (err, result) {
@@ -96,6 +101,64 @@ var TicketController = (function () {
                         version[temp.testver]["testver"] = temp.testver;
                         version[temp.testver][temp.activity] = temp.time;
                     }
+                }
+                var results = Array();
+                var i = 0;
+                for (var ver in version) {
+                    results.push(version[ver]);
+                }
+                res.ok(results);
+            });
+        });
+        return;
+    };
+    TicketController.prototype.trackver = function (req, res) {
+        Ticket.native(function (err, collection) {
+            collection.aggregate([
+                {
+                    $project: {
+                        "id": 1,
+                        "testver": 1,
+                        "tracker": 1,
+                        "_id": 0
+                    }
+                }
+            ], function (err, result) {
+                if (err)
+                    return res.serverError(err);
+                var version = {};
+                var tracker = new Array();
+                for (var i = 0; i < result.length; i++) {
+                    var temp = result[i];
+                    if (temp.testver == "") {
+                        continue;
+                    }
+                    if (temp.testver in version) {
+                        if (temp.tracker in version[temp.testver]) {
+                            version[temp.testver][temp.tracker] += 1;
+                        }
+                        else {
+                            version[temp.testver][temp.tracker] = 1;
+                            if (tracker.indexOf(temp.tracker) < 0) {
+                                tracker.push(temp.tracker);
+                            }
+                        }
+                    }
+                    else {
+                        version[temp.testver] = {};
+                        version[temp.testver]["testver"] = temp.testver;
+                        version[temp.testver][temp.tracker] = 0;
+                    }
+                }
+                for (var ver in version) {
+                    var temp = version[ver];
+                    for (var i = 0; i < tracker.length; ++i) {
+                        var key = tracker[i];
+                        if (!(key in temp)) {
+                            temp[key] = 0;
+                        }
+                    }
+                    version[ver] = temp;
                 }
                 var results = Array();
                 var i = 0;

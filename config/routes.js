@@ -51,8 +51,26 @@ module.exports.routes = {
     action: 'activity'
   },
 
+  '/circle': {
+    controller: 'time',
+    action: 'circle'
+  },
+
+  '/trackver': {
+    controller: 'ticket',
+    action: 'trackver'
+  },
+
+  '/trackerver': {
+    view: 'trackerver'
+  },
+
   '/stacked': {
     view: 'stacked'
+  },
+
+  '/circled': {
+    view: 'circled'
   },
   /***************************************************************************
   *                                                                          *
