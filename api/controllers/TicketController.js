@@ -189,3 +189,4 @@ var TicketController = (function () {
     return TicketController;
 }());
 module.exports = new TicketController();
+//# sourceMappingURL=TicketController.js.map

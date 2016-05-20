@@ -32,8 +32,12 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'tracker'
+  // '/': {
+  //   view: 'tracker'
+  // },
+
+'/': {
+    view: 'main'
   },
 
   '/test': {
@@ -71,6 +75,14 @@ module.exports.routes = {
 
   '/circled': {
     view: 'circled'
+  },
+
+  '/circles': {
+    view: 'circles'
+  },
+
+  '/index': {
+    view: 'index'
   },
   /***************************************************************************
   *                                                                          *

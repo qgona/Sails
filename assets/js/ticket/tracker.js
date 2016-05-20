@@ -3,8 +3,7 @@ var width = 960,
     radius = Math.min(width, height) / 2;
 
 var color = d3.scale.ordinal()
-    .range(["#E60012", "#F39800", "#FFF100", "#8FC31F", "#009944", "#009E96", "#00A0E9"
-            , "#0068B7", "#1D2088", "#920783", "#E4007F", "#E5004F"]);
+    .range(["#C7243A", "#DA5019", "#EDAD0B", "#27ae60", "#8e44ad", "#f1c40f", "#e74c3c", "#95a5a6", "#d35400", "#bdc3c7"]);
 
 // 円弧の外径と内径を定義
 var arc = d3.svg.arc()

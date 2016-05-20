@@ -166,3 +166,4 @@ var TimeController = (function () {
     return TimeController;
 }());
 module.exports = new TimeController();
+//# sourceMappingURL=TimeController.js.map

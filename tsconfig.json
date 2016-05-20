@@ -3,19 +3,30 @@
     "compilerOptions": {
         "target": "es5",
         "declaration": false,
-        "sourceMap": false,
+        "sourceMap": true,
         "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "noLib": false,
+        "noImplicitAny": false,
         "preserveConstEnums": false,
         "moduleResolution": "node"
     },
+    "exclude": [
+        "node_modules"
+    ],
     "filesGlob": [
         "./api/**/*.ts",
+        "./assets/**/*.ts",
         "!./**/*.d.ts",
         "!./node_modules/"
     ],
     "files": [
         "./api/controllers/TicketController.ts",
-        "./api/controllers/TimeController.ts"
+        "./api/controllers/TimeController.ts",
+        "./assets/app/app.component.ts",
+        "./assets/app/main.ts",
+        "./assets/js/ticket/app.component.ts",
+        "./assets/js/ticket/main.ts"
     ]
 }

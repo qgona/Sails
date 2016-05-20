@@ -1,31 +1,30 @@
-var margin = {top: 20, right: 20, bottom: 200, left: 40},
-    width = 1400 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+var margin = {top: 20, right: 20, bottom: 20, left: 40},
+width = 1400 - margin.left - margin.right,
+height = 800 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+.rangeRoundBands([0, width], .1);
 
 var y = d3.scale.linear()
-    .rangeRound([height, 0]);
+.rangeRound([height, 0]);
 
 var color = d3.scale.ordinal()
-    .range(["#E60012", "#F39800", "#FFF100", "#8FC31F", "#009944", "#009E96", "#00A0E9"
-            , "#0068B7", "#1D2088", "#920783", "#E4007F", "#E5004F"]);
+    .range(["#1abc9c", "#3498db", "#34495e", "#27ae60", "#8e44ad", "#f1c40f", "#e74c3c", "#95a5a6", "#d35400", "#bdc3c7"]);
 
 var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+.scale(x)
+.orient("bottom");
 
 var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(d3.format(".2s"));
+.scale(y)
+.orient("left")
+.tickFormat(d3.format(".2s"));
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select("#graph").append("svg")
+.attr("width", "100%")
+.attr("height", "100%")
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.json("/activity", function(error, data) {
   if (error) throw error;
@@ -44,57 +43,57 @@ d3.json("/activity", function(error, data) {
   y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
   svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    　　.selectAll("text")
-    　　.attr("x", 15)
-    　　.attr("y", 15)
-    　　.attr("dy", ".35em")
-    　　.attr("transform", "rotate(65)")
-    　　.style("text-anchor", "start");
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + height + ")")
+  .call(xAxis)
+  　　.selectAll("text")
+  　　.attr("x", 15)
+  　　.attr("y", 15)
+  　　.attr("dy", ".35em")
+  　　.attr("transform", "rotate(65)")
+  　　.style("text-anchor", "start");
 
   svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    　　.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("時間");
+  .attr("class", "y axis")
+  .call(yAxis)
+  　　.append("text")
+  .attr("x", -8)
+  .attr("y", 15)
+  .attr("dy", ".71em")
+  .style("text-anchor", "end")
+  .text("時間");
 
   var testver = svg.selectAll(".testver")
-      .data(data)
-    .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x(d.testver) + ",0)"; });
+  .data(data)
+  .enter().append("g")
+  .attr("class", "g")
+  .attr("transform", function(d) { return "translate(" + x(d.testver) + ",0)"; });
 
   testver.selectAll("rect")
-      .data(function(d) { return d.hours; })
-    .enter().append("rect")
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.y1); })
-      .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-      .style("fill", function(d) { return color(d.name); });
+  .data(function(d) { return d.hours; })
+  .enter().append("rect")
+  .attr("width", x.rangeBand())
+  .attr("y", function(d) { return y(d.y1); })
+  .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+  .style("fill", function(d) { return color(d.name); });
 
   var legend = svg.selectAll(".legend")
-      .data(color.domain().slice().reverse())
-      .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  .data(color.domain().slice().reverse())
+  .enter().append("g")
+  .attr("class", "legend")
+  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
   legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
+  .attr("x", width - 18)
+  .attr("width", 18)
+  .attr("height", 18)
+  .style("fill", color);
 
   legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
+  .attr("x", width - 24)
+  .attr("y", 9)
+  .attr("dy", ".35em")
+  .style("text-anchor", "end")
+  .text(function(d) { return d; });
 
 });
