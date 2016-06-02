@@ -14,6 +14,22 @@ class TicketController {
     });
   }
 
+  testver(req, res) {
+    Ticket.native(function(err, collection) {
+      collection.distinct("testver", function(err, result) {
+        var results = Array();
+        for (var i = 0; i < result.length; i++) {
+          var testver = {};
+          testver["name"] = result[i];
+          results.push(testver);
+        }
+        res.ok(results);
+      });
+    });
+    return;
+  }
+
+
   tracker(req, res): () => void {
     Ticket.native(function(err, collection) {
       collection.aggregate(

@@ -36,8 +36,13 @@ module.exports.routes = {
   //   view: 'tracker'
   // },
 
-'/': {
+  '/': {
     view: 'main'
+  },
+
+  '/testver': {
+    controller: 'ticket',
+    action: 'testver'
   },
 
   '/test': {

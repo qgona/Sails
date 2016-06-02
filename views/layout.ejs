@@ -1,70 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html class="sb-init">
 <head>
-    <title><%=typeof title == 'undefined' ? 'New Sails App' : title%></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title><%=typeof title == 'undefined' ? 'New Sails App' : title%></title>
 
-    <!-- Viewport mobile tag for sensible mobile support -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slidebars/0.10.2/slidebars.css">
+  <link rel="stylesheet" href="/styles/importer.css">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--
-        Stylesheets and Preprocessors
-        ==============================
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slidebars/0.10.2/slidebars.js"></script>
 
-        You can always bring in CSS files manually with `<link>` tags, or asynchronously
-        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
-        of Sails' conventional asset pipeline (boilerplate Gruntfile).
+  <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+  <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script src="node_modules/systemjs/dist/system.src.js"></script>
+  <script src="node_modules/rxjs/bundles/Rx.js"></script>
+  <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+  <script src="node_modules/angular2/bundles/http.dev.js"></script>
 
-        By default, stylesheets from your `assets/styles` folder are included
-        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
-        are supported. In production, your styles will be minified and concatenated into
-        a single file.
-
-        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
-        For example, here are a few things you could do:
-
-            + Change the order of your CSS files
-            + Import stylesheets from other directories
-            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
-        -->
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
-        <link rel="stylesheet" href="/styles/importer.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
-        <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
-
-        <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-        <script src="node_modules/systemjs/dist/system.src.js"></script>
-        <script src="node_modules/rxjs/bundles/Rx.js"></script>
-        <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
-
-        <script>
-            System.config({
-              map: {
+<!--
+  <script>
+    System.config({
+      map: {
               rxjs: 'node_modules/rxjs' // added this map section
             },
             packages: {
               app: {
-                  format: 'register',
-                  defaultExtension: 'js'
+                format: 'register',
+                defaultExtension: 'js'
               },
               'rxjs': {defaultExtension: 'js'} // and added this to packages
             }
-            });
-            System.import('/app/main')
-            .then(null, console.error.bind(console));
-        </script>
+          });
+    System.import('/app/main')
+    .then(null, console.error.bind(console));
+  </script>
+ -->
+</head>
 
-    </head>
+  <nav class="navbar navbar-default navbar-fixed-top sb-slide" role="navigation">
 
-    <body>
-        <script src="/js/dependencies/sails.io.js"></script>
-        <script src="https://code.jquery.com/jquery-2.2.3.js" integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <div class="sb-toggle-left navbar-left">
+      <div class="navicon-line"></div>
+      <div class="navicon-line"></div>
+      <div class="navicon-line"></div>
+    </div>
 
-        <%- body %>
+    <div class="container">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#">Home</a>
+        </li>
+        <li>
+          <a href="#">Download</a>
+        </li>
+        <li>
+          <a href="#">Usage</a>
+        </li>
+        <li>
+          <a href="#">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    </body>
-    </html>
+  <div class="sb-slidebar sb-left">
+    <nav>
+      <ul class="sb-menu">
+        <li>
+        </li>
+        <li class="sb-close">
+          <a href="#">全体</a>
+        </li>
+        <li class="sb-close">
+          <a href="stacked">チケット</a>
+        </li>
+        <li class="sb-close">
+          <a href="#">Usage</a>
+        </li>
+        <li class="sb-close">
+          <a href="#">Git</a>
+        </li>
+        <li class="sb-close">
+          <a href="#">その他</a>
+        </li>
+        <li class="sb-close">
+          <small>Sample Text</small>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <%- body %>
+
+  <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
+
+  <script>
+    (function($) {
+      $(document).ready(function() {
+        $.slidebars();
+      });
+    }) (jQuery);
+  </script>
+
+</body>
+</html>
