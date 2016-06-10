@@ -1,9 +1,9 @@
-function drawPie(id, dataset) {
+function drawPie(dataset) {
     // コンテナ
-    var width = 300,
-        height = 200,
+    var width = 900,
+        height = 600,
         radius = Math.min(width, height)/2;
-    var svg = d3.select(id)
+    var svg = d3.select("#graph").append("svg")
             .attr({
                 width : width,
                 height : height
@@ -14,7 +14,7 @@ function drawPie(id, dataset) {
     // パイを定義
     var pie = d3.layout.pie()
             .sort(null)
-            .value(function(d) { return d.rate; });
+            .value(function(d) { return d.total; });
 
     // 円弧の外径と内径を定義
     var arc = d3.svg.arc()
@@ -35,10 +35,10 @@ function drawPie(id, dataset) {
     // テキスト
     g.append("text")
         .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-        .attr("font-size", "8")
+        .attr("font-size", "12")
         .style("text-anchor", "middle")
         .style("fill", "#fff")
-        .text(function(d) { return d.data.age; });
+        .text(function(d) { return d.data._id; });
 
     // スタイル
     var colorArr = ['#E74C3C',
