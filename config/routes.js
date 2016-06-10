@@ -32,12 +32,17 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  // '/': {
-  //   view: 'tracker'
-  // },
-
   '/': {
     view: 'main'
+  },
+
+  '/tracker/testver': {
+    view: 'trackerbytestver'
+  },
+
+  '/tracker/testver/:testver': {
+    controller: 'ticket',
+    action: 'trackerbytestver'
   },
 
   '/testver': {
@@ -45,9 +50,9 @@ module.exports.routes = {
     action: 'testver'
   },
 
-  '/test': {
+  '/member': {
     controller: 'ticket',
-    action: 'findtwo'
+    action: 'member'
   },
 
   '/tracker': {

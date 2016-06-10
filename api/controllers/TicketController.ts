@@ -2,50 +2,70 @@
 
 class TicketController {
 
-  find(req, res) {
-    Ticket.find().then(hoges => {
-      res.view('hogepage', hoges);
-    });
-  }
-
-  findOne(req, res) {
-    Ticket.find().then(hoges => {
-      res.send(hoges);
-    });
-  }
-
+  //テスト対象バージョン
   testver(req, res) {
+    this.GetDistinctList(res, "testver");
+  }
+
+  //メンバー
+  member(req, res) {
+    this.GetDistinctList(res, "member");
+  }
+
+  //distinctリストを取得する
+  private GetDistinctList(res: Any, key: string) {
     Ticket.native(function(err, collection) {
-      collection.distinct("testver", function(err, result) {
+      collection.distinct(key, function(err, result) {
         var results = Array();
+        var record = {};
+        record["value"] = "";
+        results.push(record);
         for (var i = 0; i < result.length; i++) {
-          var testver = {};
-          testver["name"] = result[i];
-          results.push(testver);
+          if (result[i] == "") { continue; }
+          var record = {};
+          record["value"] = result[i];
+          results.push(record);
         }
+        results.sort(function(a, b) {
+          if (a.value < b.value) return -1;
+          if (a.value > b.value) return 1;
+          return 0;
+        });
         res.ok(results);
       });
     });
-    return;
   }
-
 
   tracker(req, res): () => void {
     Ticket.native(function(err, collection) {
       collection.aggregate(
-        [
-        {
+        [{
           "$group": {
             "_id": "$tracker",
             "total": { "$sum": 1 }
           }
-        }
-        ],
+        }],
         function(err, result) {
           if (err) return res.serverError(err);
           res.ok(result);
-        }
-        )
+        })
+    })
+    return;
+  }
+
+  trackerbytestver(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [{
+          "$group": {
+            "_id": "$tracker",
+            "total": { "$sum": 1 }
+          }
+        }],
+        function(err, result) {
+          if (err) return res.serverError(err);
+          res.ok(result);
+        })
     })
     return;
   }
@@ -59,12 +79,9 @@ class TicketController {
             from: 'time',
             localField: 'id',
             foreignField: 'id',
-            as: 'times'
-          }
+            as: 'times'}
         },
-        {
-          $unwind: "$times"
-        },
+        { $unwind: "$times" },
         {
           $match: {
             tracker: "出荷前バグ",
@@ -103,8 +120,7 @@ class TicketController {
             _id: "$id",
             "count": { $sum: 1 }
           }
-        }
-        ],
+        }],
         function(err, result) {
           if (err) return res.serverError(err);
           var version = {};

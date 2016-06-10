@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 20, bottom: 20, left: 40},
 width = 1400 - margin.left - margin.right,
-height = 800 - margin.top - margin.bottom;
+height = 600 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
 .rangeRoundBands([0, width], .1);
@@ -21,8 +21,8 @@ var yAxis = d3.svg.axis()
 .tickFormat(d3.format(".2s"));
 
 var svg = d3.select("#graph").append("svg")
-.attr("width", "100%")
-.attr("height", "100%")
+.attr("width", "1000px")
+.attr("height", "1000px")
 .append("g")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 

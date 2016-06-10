@@ -15,32 +15,12 @@
   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slidebars/0.10.2/slidebars.js"></script>
 
-  <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
-  <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-  <script src="node_modules/systemjs/dist/system.src.js"></script>
-  <script src="node_modules/rxjs/bundles/Rx.js"></script>
-  <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
-  <script src="node_modules/angular2/bundles/http.dev.js"></script>
-
-<!--
-  <script>
-    System.config({
-      map: {
-              rxjs: 'node_modules/rxjs' // added this map section
-            },
-            packages: {
-              app: {
-                format: 'register',
-                defaultExtension: 'js'
-              },
-              'rxjs': {defaultExtension: 'js'} // and added this to packages
-            }
-          });
-    System.import('/app/main')
-    .then(null, console.error.bind(console));
-  </script>
- -->
-</head>
+  <script src="/node_modules/systemjs/dist/system-polyfills.js"></script>
+  <script src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script src="/node_modules/systemjs/dist/system.src.js"></script>
+  <script src="/node_modules/rxjs/bundles/Rx.js"></script>
+  <script src="/node_modules/angular2/bundles/angular2.dev.js"></script>
+  <script src="/node_modules/angular2/bundles/http.dev.js"></script>
 
   <nav class="navbar navbar-default navbar-fixed-top sb-slide" role="navigation">
 
@@ -74,10 +54,10 @@
         <li>
         </li>
         <li class="sb-close">
-          <a href="#">全体</a>
+          <a href="overview">概要</a>
         </li>
         <li class="sb-close">
-          <a href="stacked">チケット</a>
+          <a href="/tracker/testver">バージョン別トラッカー</a>
         </li>
         <li class="sb-close">
           <a href="#">Usage</a>
@@ -94,11 +74,6 @@
       </ul>
     </nav>
   </div>
-
-  <%- body %>
-
-  <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
-
   <script>
     (function($) {
       $(document).ready(function() {
@@ -106,6 +81,10 @@
       });
     }) (jQuery);
   </script>
+
+  <%- body %>
+
+  <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
 
 </body>
 </html>

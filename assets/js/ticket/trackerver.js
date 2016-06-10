@@ -21,7 +21,7 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .tickFormat(d3.format(".2s"));
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -50,6 +50,7 @@ d3.json("/trackver", function(error, data) {
     　　.selectAll("text")
     　　.attr("x", 15)
     　　.attr("y", 15)
+    　　.attr("stroke-width", 2)
     　　.attr("dy", ".35em")
     　　.attr("transform", "rotate(65)")
     　　.style("text-anchor", "start");
@@ -66,7 +67,7 @@ d3.json("/trackver", function(error, data) {
 
   var testver = svg.selectAll(".testver")
       .data(data)
-    .enter().append("g")
+      .enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) { return "translate(" + x(d.testver) + ",0)"; });
 
