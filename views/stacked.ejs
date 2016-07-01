@@ -3,8 +3,6 @@
 	<div class="container">
 		<div class="row">
 			<div id="content" class="col-xs-12 col-sm-9">
-				<testver>Loading....</testver>
-				<member>Loading....</member>
 				<div id="graph"></div>
 			</div>
 		</div>
@@ -17,24 +15,5 @@
 		</footer>
 	</div>
 </div>
-
-<script>
-	System.config({
-		map: {
-        rxjs: 'node_modules/rxjs' // added this map section
-    },
-    packages: {
-    	app: {
-    		format: 'register',
-    		defaultExtension: 'js'
-    	},
-          'rxjs': {defaultExtension: 'js'} // and added this to packages
-      }
-  });
-	System.import('/app/compornents/testver/main')
-	.then(null, console.error.bind(console));
-	System.import('/app/compornents/member/main')
-	.then(null, console.error.bind(console));
-</script>
 
 <script src="/js/ticket/stacked.js"></script>

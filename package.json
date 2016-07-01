@@ -34,8 +34,8 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "tscapi": "cd ./api && tsc",
-    "tscassets": "cd ./assets/ && tsc"
+    "tap": "cd ./api/controllers && tsc",
+    "tas": "cd ./assets/ && tsc"
   },
   "main": "app.js",
   "repository": {

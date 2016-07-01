@@ -1,22 +1,7 @@
 <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<div id="sb-site">
-	<div id="maincontents" class="container">
-		<div class="row">
-			<div id="content" class="col-xs-12 col-sm-9">
-				<testver>Loading....</testver>
-				<div id="graph"></div>
-			</div>
-		</div>
+<testver>Loading....</testver>
+<div id="graph" width="100%" ></div>
 
-		<footer>
-			<div class="row">
-				<div class="col-xs-12">
-				</div>
-			</div>
-		</footer>
-
-	</div>
-</div>
 <script src="/js/ticket/circle.js"></script>
 
 <script>
@@ -36,20 +21,20 @@
 	.then(null, console.error.bind(console));
 </script>
 
-  <script>
-    (function($) {
-      $(document).ready(function() {
-
-		$.ajax({
-    		type:"POST",
-    		url: '/tracker'
-		}).then(
-		    function (data) {
-				drawPie(data);
-    		},
-		    function () {
-   				alert("読み込み失敗");
-			});
-      });
-    }) (jQuery);
-  </script>
+<script>
+	(function($) {
+		$(document).ready(function() {
+			$.ajax({
+				type:"POST",
+				url: '/tracker'
+			}).then(
+				function (data) {
+					drawPieChart(data, 400, 300);
+				},
+				function () {
+					alert("読み込み失敗");
+				}
+			);
+		});
+	}) (jQuery);
+</script>

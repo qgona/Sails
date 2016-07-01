@@ -4,16 +4,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title><%=typeof title == 'undefined' ? 'New Sails App' : title%></title>
 
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slidebars/0.10.2/slidebars.css">
-  <link rel="stylesheet" href="/styles/importer.css">
-
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+  <link rel="stylesheet" href="styles/importer.css">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slidebars/0.10.2/slidebars.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 
   <script src="/node_modules/systemjs/dist/system-polyfills.js"></script>
   <script src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
@@ -22,69 +19,38 @@
   <script src="/node_modules/angular2/bundles/angular2.dev.js"></script>
   <script src="/node_modules/angular2/bundles/http.dev.js"></script>
 
-  <nav class="navbar navbar-default navbar-fixed-top sb-slide" role="navigation">
+</head>
+<header>
+<nav>
+  <ul class="left">
+    <li>
+      <a href="#!" onclick="$('.button-collapse').sideNav('show');">
+        <i class="material-icons" >menu</i>
+      </a>
+    </li>
+  </ul>
+  <ul class="right">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li><a href="#!">Second Sidebar Link</a></li>
+  </ul>
+  <ul id="slide-out" class="side-nav">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li><a href="#!">Second Sidebar Link</a></li>
+  </ul>
+  <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+</nav>
+</header>
+<script>
+  $(document).ready(function() {
+     $('.button-collapse').sideNav({
+        closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+      }
+    );
+  });
+</script>
 
-    <div class="sb-toggle-left navbar-left">
-      <div class="navicon-line"></div>
-      <div class="navicon-line"></div>
-      <div class="navicon-line"></div>
-    </div>
+<%- body %>
 
-    <div class="container">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="#">Home</a>
-        </li>
-        <li>
-          <a href="#">Download</a>
-        </li>
-        <li>
-          <a href="#">Usage</a>
-        </li>
-        <li>
-          <a href="#">Contact</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="sb-slidebar sb-left">
-    <nav>
-      <ul class="sb-menu">
-        <li>
-        </li>
-        <li class="sb-close">
-          <a href="overview">概要</a>
-        </li>
-        <li class="sb-close">
-          <a href="/tracker/testver">バージョン別トラッカー</a>
-        </li>
-        <li class="sb-close">
-          <a href="#">Usage</a>
-        </li>
-        <li class="sb-close">
-          <a href="#">Git</a>
-        </li>
-        <li class="sb-close">
-          <a href="#">その他</a>
-        </li>
-        <li class="sb-close">
-          <small>Sample Text</small>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <script>
-    (function($) {
-      $(document).ready(function() {
-        $.slidebars();
-      });
-    }) (jQuery);
-  </script>
-
-  <%- body %>
-
-  <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
-
+<script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
 </body>
 </html>

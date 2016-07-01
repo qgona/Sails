@@ -1,59 +1,67 @@
-function drawPie(dataset) {
-    // コンテナ
-    var width = 900,
-        height = 600,
-        radius = Math.min(width, height)/2;
-    var svg = d3.select("#graph").append("svg")
-            .attr({
-                width : width,
-                height : height
-            })
-            .append("g")
-            .attr("transform",  "translate(" + width / 2 + "," + height / 2 + ")");
+//円グラフ描画
+function drawPieChart(data, h, w, target = "#graph", title = "", add = true) {
+    var width = h;
+    var height = w;
+
+    if (add) {
+        var svg = d3.select(target).append("svg").attr({
+            width : width,
+            height : height
+        })
+        .append("g")
+        .attr("transform",  "translate(" + width / 2 + "," + height / 2 + ")");
+    } else {
+        var svg = d3.select(target).attr({
+            width : width,
+            height : height
+        })
+        .append("g")
+        .attr("transform",  "translate(" + width / 2 + "," + height / 2 + ")");
+    }
 
     // パイを定義
     var pie = d3.layout.pie()
-            .sort(null)
-            .value(function(d) { return d.total; });
+    .sort(null)
+    .value(function(d) { return d.total; });
 
     // 円弧の外径と内径を定義
+    var radius = Math.min(width, height) / 2;
     var arc = d3.svg.arc()
-            .outerRadius(radius - 10)
-            .innerRadius(5);
+    .outerRadius(radius - 10)
+    .innerRadius(5);
+
+    var text = svg.append("text")
+    .attr("x", -200)
+    .attr("y", -120)
+    .text(title);
 
     // データバインド
     var g = svg.selectAll("path")
-            .data(pie(dataset))
-            .enter()
-            .append("g")
-            .attr("class", "arc");
+    .data(pie(data))
+    .enter()
+    .append("g")
+    .attr("class", "arc");
 
-    // 描画
     g.append("path")
-        .attr("d", arc); // 円弧を設定
+    .attr("d", arc); // 円弧を設定
 
-    // テキスト
-    g.append("text")
-        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-        .attr("font-size", "12")
-        .style("text-anchor", "middle")
-        .style("fill", "#fff")
-        .text(function(d) { return d.data._id; });
-
-    // スタイル
     var colorArr = ['#E74C3C',
-                    '#3498DB',
-                    '#2ECC71',
-                    '#9B59B6',
-                    '#34495e',
-                    '#449248',
-                    '#652681'];
-    g.attr("stroke", "white")    // 円グラフの区切り線を白色にする
-        .style({
-            fill: function(d, i) {
-                return colorArr[i];
-            }
-        });
+    '#3498DB',
+    '#2ECC71',
+    '#9B59B6',
+    '#34495e',
+    '#449248',
+    '#652681'];
+
+    var color = d3.scale.ordinal()
+    .range(colorArr);
+
+    g.attr("stroke", "white")
+    .style({
+        fill: function(d, i) {
+            return colorArr[i];
+        }
+    });
 
     //アニメーション
     svg.selectAll("path")
@@ -63,9 +71,39 @@ function drawPie(dataset) {
             var interpolate = d3.interpolate(
                 { startAngle : 0, endAngle : 0 },   // 各円グラフの開始角度
                 { startAngle : d.startAngle, endAngle : d.endAngle }    // 各円グラフの終了角度
-            );
+                );
             return function(t){
                 return arc(interpolate(t)); // 時間に応じて処理
             };
         });
+    // テキスト
+    g.append("text")
+    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+    .attr("font-size", "14")
+    .style("text-anchor", "middle")
+    .style("fill", "#fff")
+    .text(function(d) { return d.data._id; });
+
+    var legend = svg.selectAll(".legend")
+    .data(color.domain().slice().reverse())
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    // 凡例の色を描画
+    legend.append("rect")
+      .attr("x", 0)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", function(d) {
+        return colorCategoryScale(d.ratio);
+      });
+
+    // 凡例の説明を描画
+    legend.append("text")
+    .attr("x", 65)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) { return d.testver; });
 }

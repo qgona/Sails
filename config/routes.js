@@ -36,43 +36,72 @@ module.exports.routes = {
     view: 'main'
   },
 
+  '/version': {
+    view: 'version'
+  },
+
   '/tracker/testver': {
     view: 'trackerbytestver'
   },
 
+  '/commit': {
+    controller: 'js/commit',
+    action: 'all'
+  },
+
+  '/tracker/:testver': {
+    controller: 'js/ticket',
+    action: 'tracker'
+  },
+
   '/tracker/testver/:testver': {
-    controller: 'ticket',
+    controller: 'js/ticket',
     action: 'trackerbytestver'
   },
 
   '/testver': {
-    controller: 'ticket',
+    controller: 'js/ticket',
     action: 'testver'
   },
 
   '/member': {
-    controller: 'ticket',
+    controller: 'js/ticket',
     action: 'member'
   },
 
   '/tracker': {
-    controller: 'ticket',
+    controller: 'js/ticket',
     action: 'tracker'
   },
 
+  '/activityarea': {
+    controller: 'js/time',
+    action: 'activityarea'
+  },
+
+  '/active': {
+    controller: 'js/time',
+    action: 'active'
+  },
+
   '/activity': {
-    controller: 'time',
+    controller: 'js/time',
     action: 'activity'
   },
 
   '/circle': {
-    controller: 'time',
+    controller: 'js/time',
     action: 'circle'
   },
 
   '/trackver': {
-    controller: 'ticket',
+    controller: 'js/ticket',
     action: 'trackver'
+  },
+
+  '/bugdensity': {
+    controller: 'js/ticket',
+    action: 'bugdensity'
   },
 
   '/trackerver': {
@@ -87,8 +116,8 @@ module.exports.routes = {
     view: 'circled'
   },
 
-  '/circles': {
-    view: 'circles'
+  '/line': {
+    view: 'line'
   },
 
   '/index': {
