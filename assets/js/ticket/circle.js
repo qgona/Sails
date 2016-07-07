@@ -43,18 +43,11 @@ function drawPieChart(data, h, w, target = "#graph", title = "", add = true) {
     .attr("class", "arc");
 
     g.append("path")
-    .attr("d", arc); // 円弧を設定
+    .attr("d", arc)
+    .attr("data-legend", function(d){return d.data._id}); // 円弧を設定
 
-    var colorArr = ['#E74C3C',
-    '#3498DB',
-    '#2ECC71',
-    '#9B59B6',
-    '#34495e',
-    '#449248',
-    '#652681'];
-
-    var color = d3.scale.ordinal()
-    .range(colorArr);
+    var color = d3.scale.category20();
+    var colorArr = color.range();
 
     g.attr("stroke", "white")
     .style({
@@ -90,20 +83,16 @@ function drawPieChart(data, h, w, target = "#graph", title = "", add = true) {
     .attr("class", "legend")
     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-    // 凡例の色を描画
     legend.append("rect")
-      .attr("x", 0)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", function(d) {
-        return colorCategoryScale(d.ratio);
-      });
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", color);
 
-    // 凡例の説明を描画
     legend.append("text")
-    .attr("x", 65)
+    .attr("x", width - 24)
     .attr("y", 9)
     .attr("dy", ".35em")
     .style("text-anchor", "end")
-    .text(function(d) { return d.testver; });
+    .text(function(d) { return d; });
 }

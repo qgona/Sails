@@ -40,8 +40,13 @@ module.exports.routes = {
     view: 'version'
   },
 
-  '/tracker/testver': {
-    view: 'trackerbytestver'
+  '/scatter': {
+    view: 'scatter'
+  },
+
+  '/lines': {
+    controller: 'js/commit',
+    action: 'lines'
   },
 
   '/commit': {
@@ -77,6 +82,11 @@ module.exports.routes = {
   '/activityarea': {
     controller: 'js/time',
     action: 'activityarea'
+  },
+
+  '/activitylist': {
+    controller: 'js/time',
+    action: 'activitylist'
   },
 
   '/active': {
@@ -118,6 +128,10 @@ module.exports.routes = {
 
   '/line': {
     view: 'line'
+  },
+
+  '/bar': {
+    view: 'bar'
   },
 
   '/index': {

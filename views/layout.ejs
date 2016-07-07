@@ -21,32 +21,34 @@
 
 </head>
 <header>
-<nav>
-  <ul class="left">
-    <li>
-      <a href="#!" onclick="$('.button-collapse').sideNav('show');">
-        <i class="material-icons" >menu</i>
-      </a>
-    </li>
-  </ul>
-  <ul class="right">
-    <li><a href="#!">First Sidebar Link</a></li>
-    <li><a href="#!">Second Sidebar Link</a></li>
-  </ul>
-  <ul id="slide-out" class="side-nav">
-    <li><a href="#!">First Sidebar Link</a></li>
-    <li><a href="#!">Second Sidebar Link</a></li>
-  </ul>
-  <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-</nav>
+  <nav>
+    <ul class="left">
+      <li>
+        <a href="#!" onclick="$('.button-collapse').sideNav('show');">
+          <i class="material-icons" >menu</i>
+        </a>
+      </li>
+    </ul>
+    <ul class="right">
+      <li><a href="#!">トラッカー別</a></li>
+      <li><a href="#!">活動時間</a></li>
+      <li><a href="#!">コミット数</a></li>
+    </ul>
+    <ul id="slide-out" class="side-nav">
+      <li><a href="#!">トラッカー別</a></li>
+      <li><a href="#!">活動時間</a></li>
+      <li><a href="#!">コミット数</a></li>
+    </ul>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+  </nav>
 </header>
 <script>
   $(document).ready(function() {
-     $('.button-collapse').sideNav({
+   $('.button-collapse').sideNav({
         closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
       }
-    );
-  });
+      );
+ });
 </script>
 
 <%- body %>
