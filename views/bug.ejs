@@ -1,0 +1,24 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+
+<div class="card charttile" >
+	<testver>Loading....</testver>
+	<div id="graph"></div>
+</div>
+
+<script src="/js/ticket/bar.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			type:"POST",
+			url: '/lines'
+		}).then(
+			function (data) {
+				drawBarChart(data);
+			},
+			function () {
+				alert("読み込み失敗");
+			}
+		);
+	});
+</script>

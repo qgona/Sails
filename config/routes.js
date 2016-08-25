@@ -36,6 +36,10 @@ module.exports.routes = {
     view: 'main'
   },
 
+  '/multidonuts': {
+    view: 'multidonuts'
+  },
+
   '/version': {
     view: 'version'
   },
@@ -47,6 +51,11 @@ module.exports.routes = {
   '/lines': {
     controller: 'js/commit',
     action: 'lines'
+  },
+
+  '/allactivity': {
+    controller: 'js/activity',
+    action: 'findall'
   },
 
   '/commit': {
@@ -84,6 +93,11 @@ module.exports.routes = {
     action: 'activityarea'
   },
 
+  '/multiactivity': {
+    controller: 'js/time',
+    action: 'multiactivity'
+  },
+
   '/activitylist': {
     controller: 'js/time',
     action: 'activitylist'
@@ -107,6 +121,16 @@ module.exports.routes = {
   '/trackver': {
     controller: 'js/ticket',
     action: 'trackver'
+  },
+
+  '/months': {
+    controller: 'js/master',
+    action: 'months'
+  },
+
+  '/kinds': {
+    controller: 'js/master',
+    action: 'kinds'
   },
 
   '/bugdensity': {

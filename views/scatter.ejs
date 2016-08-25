@@ -5,7 +5,7 @@
 
 <div id="graph"></div>
 
-<script src="/js/ticket/bar.js"></script>
+<script src="/js/ticket/scatter.js"></script>
 
 <script>
   System.config({
@@ -29,7 +29,7 @@
     $(document).ready(function() {
       $.ajax({
         type:"POST",
-        url: '/tracker'
+        url: '/activity'
       }).then(
         function (data) {
           drawScatterChart(data.ver, "開発作業", "テスト");

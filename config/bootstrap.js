@@ -11,7 +11,17 @@
 
 module.exports.bootstrap = function(cb) {
 
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
+	// It's very important to trigger this callback method when you are finished
+	// with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+	cb();
+
+	// Register cron jobs
+	var CronJob = require('cron').CronJob;
+	var jobs = sails.config.crontab;
+
+	for (table in jobs) {
+		if (typeof table === 'string') {
+			new CronJob(table, jobs[table], null, true, 'Asia/Tokyo');
+		}
+	}
 };

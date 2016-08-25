@@ -1,11 +1,23 @@
 <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.7/d3-tip.js" charset="utf-8"></script>
 
-<activity>Loading....</activity>
+<testver>Loading....</testver>
+<div class="card charttile" >
+  <div id="graph"></div>
+</div>
 
-<div id="graph"></div>
+<div class="card charttile" >
+  <div id="graph"></div>
+</div>
 
-<script src="/js/ticket/bar.js"></script>
+<div class="card charttile" >
+  <div id="graph"></div>
+</div>
+
+<div class="card charttile" >
+  <div id="graph"></div>
+</div>
+
+<script src="/js/ticket/circle.js"></script>
 
 <script>
   System.config({
@@ -20,7 +32,7 @@
           'rxjs': {defaultExtension: 'js'} // and added this to packages
       }
   });
-  System.import('/app/compornents/activity/main')
+  System.import('/app/compornents/testver/main')
   .then(null, console.error.bind(console));
 </script>
 
@@ -32,7 +44,7 @@
         url: '/tracker'
       }).then(
         function (data) {
-          drawScatterChart(data.ver, "開発作業", "テスト");
+          drawPieChart(data, 400, 400);
         },
         function () {
           alert("読み込み失敗");

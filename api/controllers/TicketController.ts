@@ -1,39 +1,18 @@
-/// <reference path="../typings/app.d.ts" />
+/// <reference path="BaseController.ts" />
+import base = require("./BaseController");
 
-class TicketController {
+class TicketController extends base.BaseController {
 
   //テスト対象バージョン
   testver(req, res) {
-    this.GetDistinctList(res, "testver");
+    super.GetDistinctList(res, Ticket, "testver");
   }
 
   //メンバー
   member(req, res) {
-    this.GetDistinctList(res, "member");
-  }
-
-  //distinctリストを取得する
-  private GetDistinctList(res: Any, key: string) {
-    Ticket.native(function(err, collection) {
-      collection.distinct(key, function(err, result) {
-        var results = Array();
-        var record = {};
-        record["value"] = "";
-        results.push(record);
-        for (var i = 0; i < result.length; i++) {
-          if (result[i] == "") { continue; }
-          var record = {};
-          record["value"] = result[i];
-          results.push(record);
-        }
-        results.sort(function(a, b) {
-          if (a.value < b.value) return -1;
-          if (a.value > b.value) return 1;
-          return 0;
-        });
-        res.ok(results);
-      });
-    });
+    // super.GetDistinctList(res, Ticket, "member");
+    var job = require('../../services/redmine.js');
+    job.getData();
   }
 
   tracker(req, res): () => void {

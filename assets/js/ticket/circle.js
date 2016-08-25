@@ -68,7 +68,7 @@ function drawPieChart(data, h, w, target = "#graph", title = "", add = true) {
             return function(t){
                 return arc(interpolate(t)); // 時間に応じて処理
             };
-        });
+    });
     // テキスト
     g.append("text")
     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })

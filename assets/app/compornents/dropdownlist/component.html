@@ -1,0 +1,3 @@
+<select #test (change)="onChange($event, item.value)">
+  <option *ngFor="#item of data" value= {{item.value}}>{{item.value}}</option>
+</select>

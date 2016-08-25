@@ -1,0 +1,21 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+
+<div id="graph" width="100%" ></div>
+
+<script src="/js/ticket/line.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			type:"POST",
+			url: '/commit'
+		}).then(
+			function (data) {
+				drawLineChart(data);
+			},
+			function () {
+				alert("読み込み失敗");
+			}
+		);
+	});
+</script>
