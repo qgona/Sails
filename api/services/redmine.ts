@@ -4,37 +4,45 @@ class Redmine  {
   getData() {
     var param = {
       offset : 0,  //ページ数
-      limit : 25,  //ページあたり表示数
+      limit : 100,  //ページあたり表示数
       count : 0,  //データ取得数
       total : 0  //データ合計数
     };
 
-    //チケットを取得する
-    do {
-      try {
-        sails.log('started');
-        getTicket(param)
-        .then(function (res) {
-          var data = JSON.parse(res);
-          sails.log('0');
-          addTicket(param, data);
+    dropTicket()
+    .then(function () {
+      insertTicket(param);
+    });
+  }
+
+  export function insertTicket(param) {
+    sails.log('start');
+
+    sails.log('offset:' + param.offset);
+    sails.log('total:' + param.total);
+    if (param.offset > param.total) {
+        sails.log('end');
+        return;
+    }
+    getTicket(param)
+    .then(function () {
+      insertTicket(param)
+    });
+  }
+
+  export function dropTicket():Promise<any> {
+    return new Promise((resolve,reject) => {
+        Ticket.native(function(err, collection) {
+          collection.drop(function(err, response) {
+            sails.log('drop');
+            resolve();
+          });
         });
-        sails.log('ended');
-      } catch (e) {
-        sails.log(e);
-      }
-    } while (param.count < param.total)
+    });
   }
 
   export function getTicket(param):Promise<any> {
-
     return new Promise((resolve,reject) => {
-      Ticket.native(function(err, collection) {
-        collection.drop(function(err, response) {
-          sails.log('drop');
-        });
-      });
-
       var http = require('http');
       var options = {
         host: 'dev-redmine.being.group',
@@ -58,8 +66,10 @@ class Redmine  {
 
         response.on('end', function(){
           try {
-              sails.log('end');
-              resolve(responseData);
+              var data = JSON.parse(responseData);
+              param.total = data.total_count;
+              addTicket(param, data);
+              resolve();
           } catch (e) {
               sails.log(e);
               reject(e);
@@ -70,13 +80,9 @@ class Redmine  {
   }
 
   export function addTicket(param, data) {
-    // return new Promise((resolve,reject) => {
-      sails.log('start');
       try {
         var ticketArray = new Array();
-        sails.log('1');
         for (var i = 0; i < data.issues.length; i++){
-          sails.log('2');
           var ticket = new Object();
           ticket.id = data.issues[i].id;
           ticket.subject = data.issues[i].subject;
@@ -87,16 +93,12 @@ class Redmine  {
           var item = new Object();
           item = ticketArray[i];
           Ticket.create(item).exec(function(err, activity) {});
-          sails.log('insert');
         }
-        param.total = data.total_count;
         param.offset = param.offset + param.limit;
         param.count = param.count + ticketArray.length;
       } catch (e) {
         sails.log(e);
       }
-    // });
   }
 }
 export = new Redmine();
-
