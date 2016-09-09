@@ -36,8 +36,17 @@ module.exports.routes = {
     view: 'main'
   },
 
+  '/activity': {
+    controller: 'js/activity',
+    action: 'regist'
+  },
+
   '/multidonuts': {
     view: 'multidonuts'
+  },
+
+  '/allcategory': {
+    view: 'category'
   },
 
   '/version': {
@@ -55,6 +64,11 @@ module.exports.routes = {
 
   '/allactivity': {
     controller: 'js/activity',
+    action: 'findall'
+  },
+
+  '/categorytracker': {
+    controller: 'js/category',
     action: 'findall'
   },
 
@@ -108,9 +122,9 @@ module.exports.routes = {
     action: 'active'
   },
 
-  '/activity': {
-    controller: 'js/time',
-    action: 'activity'
+  '/category': {
+    controller: 'js/category',
+    action: 'category'
   },
 
   '/circle': {

@@ -29,10 +29,10 @@
     $(document).ready(function() {
       $.ajax({
         type:"POST",
-        url: '/activity'
+        url: '/allactivity'
       }).then(
         function (data) {
-          drawScatterChart(data.ver, "開発作業", "テスト");
+          drawScatterChart(data.activity, "開発作業", "テスト");
         },
         function () {
           alert("読み込み失敗");

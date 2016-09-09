@@ -1,0 +1,21 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+
+<div id="graph"></div>
+
+<script src="/js/ticket/multidonuts.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			type:"POST",
+			url: '/categorytracker'
+		}).then(
+			function (data) {
+				MultiDonuts(data.category);
+			},
+			function () {
+				alert("読み込み失敗");
+			}
+		);
+	});
+</script>
