@@ -1,5 +1,5 @@
 //棒グラフ
-function drawBarChart(data) {
+function DrawBarChart(data) {
 
   var margin = {top: 20, right: 20, bottom: 70, left: 40},
   width = 1800 - margin.left - margin.right,

@@ -8,7 +8,7 @@ var x = d3.scale.ordinal()
 var y = d3.scale.linear()
 .rangeRound([height, 0]);
 
-var color = d3.scale.category20();
+var color = d3.scale.category20c();
 
 var xAxis = d3.svg.axis()
 .scale(x)
@@ -28,7 +28,7 @@ var svg = d3.select("#graph").append("svg")
 d3.json("/activity", function(error, data) {
   if (error) throw error;
 
-  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "testver"; }));
+  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "title"; }));
 
   data.forEach(function(d) {
     var y0 = 0;

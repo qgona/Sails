@@ -8,7 +8,7 @@
 	$(document).ready(function() {
 		$.ajax({
 			type:"POST",
-			url: '/categorytracker'
+			url: '/categoryall'
 		}).then(
 			function (data) {
 				MultiDonuts(data.category);

@@ -22,6 +22,23 @@ class Redmine  {
     });
   }
 
+  registMember() {
+    var member = {
+      offset : 0,
+      limit : 100,
+      count : 0,
+      total : 0
+    };
+
+    dropMember()
+    .then(function () {
+      insertMember(member)
+      .then(function () {
+      });
+    });
+  }
+
+
   export function dropVersion():Promise<any> {
     return new Promise((resolve,reject) => {
       Version.native(function(err, collection) {
@@ -428,6 +445,100 @@ class Redmine  {
     dest.created_on = new Date(src.created_on);
     dest.updated_on = new Date(src.updated_on);
 
+    return dest;
+  }
+
+  export function dropMember():Promise<any> {
+    return new Promise((resolve,reject) => {
+      Member.native(function(err, collection) {
+        collection.drop(function(err, response) {
+          sails.log('drop member');
+          resolve();
+        });
+      });
+    });
+  }
+
+  export function insertMember(param):Promise<any> {
+    return new Promise((resolve, reject) => {
+      sails.log('start');
+      sails.log('offset:' + param.offset);
+      sails.log('total:' + param.total);
+      if (param.offset > param.total) {
+        sails.log('end');
+        return;
+      }
+      getMember(param)
+      .then(function () {
+        insertMember(param);
+        resolve();
+      });
+    });
+  }
+
+  export function getMember(param):Promise<any> {
+    return new Promise((resolve, reject) => {
+      var http = require('http');
+      var options = {
+        host: 'dev-redmine.being.group',
+        port: 80,
+        path: '/projects/gaia9/memberships.json?limit=100&key=9e2f1ffa4b416966cada7e2fbc7ea889576ea9fa',
+        method: 'GET'
+      };
+      sails.log(options.path);
+
+      http.request(options, function(response) {
+        var responseData = '';
+        response.setEncoding('utf8');
+        response.on('data', function(data){
+          responseData += data;
+        });
+        response.once('error', function(err){
+          reject(err);
+        });
+        response.on('end', function(){
+          try {
+            var data = JSON.parse(responseData);
+            param.total = data.total_count;
+            addMember(param, data);
+            resolve();
+          } catch (e) {
+            sails.log(e);
+            reject(e);
+          }
+        });
+      }).end();
+    });
+  }
+
+  export function addMember(param, data) {
+    try {
+      var memberArray = new Array();
+      for (var i = 0; i < data.memberships.length; i++){
+        var member = new Object();
+        var item = data.memberships[i];
+        if (!item.user) continue;
+        setMember(member, data.memberships[i]);
+        memberArray.push(member);
+      }
+
+      for (var i = 0; i < memberArray.length; i++){
+        var item = new Object();
+        item = memberArray[i];
+        Member.create(item).exec(
+            function(err, result) {}
+        );
+      }
+      param.offset = param.offset + param.limit;
+      param.count = param.count + memberArray.length;
+    } catch (e) {
+      sails.log(e);
+    }
+  }
+
+  export Object function setMember(dest, src) {
+    dest.memberid = String(src.user.id);
+    dest.name = src.user.name;
     return dest;
   }
 }

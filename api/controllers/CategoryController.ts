@@ -65,29 +65,31 @@ class CategoryController extends base.BaseController {
                 results[cat]['values'] = trackervalue;
               }
               for (var cat in results) {
-                 Category.create(results[cat]).exec(function(err, activity) {});
+                Category.create(results[cat]).exec(function(err, activity) {});
               }
               res.ok();
             }
-          )
+            )
         });
 
       });
     });
-  	return;
+    return;
   }
 
   findall(req, res): () => void {
   	Category.native(function(err, collection) {
   		collection.aggregate(
-        [{
-          $project: {
-            "values": 1,
-            "total": 1,
-            "title": 1,
-            "_id":0
+        [
+          {
+            $project: {
+              "values": 1,
+              "total": 1,
+              "title": 1,
+              "_id":0
+            },
           }
-        }],
+        ],
         function(err, results) {
         	if (err) return res.serverError(err);
 
@@ -95,9 +97,86 @@ class CategoryController extends base.BaseController {
         	result['category'] = results;
         	res.ok(result);
         }
-      )
+        )
     });
   	return;
+  }
+
+  findTracker(req, res): () => void {
+    Category.native(function(err, collection) {
+      collection.aggregate(
+        [
+          {
+            $project: {
+              "values": 1,
+              "title": 1,
+              "_id":0
+            }
+          }
+        ],
+        function(err, results) {
+          if (err) return res.serverError(err);
+
+          for (var i = 0; i < results.length; i++) {
+            var temp = results[i];
+            for (var j = 0; j < temp.values.length; j++) {
+              var cat = temp.values[j];
+              if (cat.name == "バグ" || cat.name == "要望")　{
+                temp[cat.name] = cat.value;
+              }
+            }
+            delete temp.values;
+            results[i] = temp;
+          }
+
+          var result = new Object();
+          result['category'] = results;
+          res.ok(result);
+        }
+        )
+    });
+    return;
+  }
+
+  findallTracker(req, res): () => void {
+    Category.native(function(err, collection) {
+      collection.aggregate(
+        [
+          {
+            $project: {
+              "values": 1,
+              "title": 1,
+              "_id":0
+            }
+          },
+          {
+            $match: {
+              "title": {$ne:null}
+            }
+          }
+        ],
+        function(err, results) {
+          if (err) return res.serverError(err);
+
+          for (var i = 0; i < results.length; i++) {
+            var temp = results[i];
+            for (var j = 0; j < temp.values.length; j++) {
+              var cat = temp.values[j];
+              if (cat.name != "total")　{
+                temp[cat.name] = cat.value;
+              }
+            }
+            delete temp.values;
+            results[i] = temp;
+          }
+
+          var result = new Object();
+          result['category'] = results;
+          res.ok(result);
+        }
+        )
+    });
+    return;
   }
 }
 export = new CategoryController();

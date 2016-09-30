@@ -1,19 +1,20 @@
-<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<div id="sb-site">
-	<div class="container">
-		<div class="row">
-			<div id="content" class="col-xs-12 col-sm-9">
-				<div id="graph"></div>
-			</div>
-		</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+<div id="graph"></div>
 
-		<footer>
-			<div class="row">
-				<div class="col-xs-12">
-				</div>
-			</div>
-		</footer>
-	</div>
-</div>
+<script src="/js/ticket/bar.js"></script>
 
-<script src="/js/ticket/stacked.js"></script>
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			type:"POST",
+			url: '/categorytracker'
+		}).then(
+			function (data) {
+				DrawBarChart(data.category);
+			},
+			function () {
+				alert("読み込み失敗");
+			}
+		);
+	});
+</script>

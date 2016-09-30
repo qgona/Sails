@@ -142,19 +142,19 @@ class ActivityController extends base.BaseController {
         function(err, results) {
           if (err) return res.serverError(err);
 
-            var activity = {};
             for (var i = 0; i < results.length; i++) {
               var temp = results[i];
-              for (var act in temp.values) {
+              for (var j = 0; j < temp.values.length; j++) {
+                var act = temp.values[j];
                 temp[act.name] = act.value;
               }
+              delete temp.values;
+              results[i] = temp;
             }
-            var results = Array();
-            var i = 0;
-            for (var ver in version) {
-              results.push(version[ver]);
-            }
-            res.ok(results);
+
+            var result = new Object();
+            result['activity'] = results;
+            res.ok(result);
         }
       )
     });

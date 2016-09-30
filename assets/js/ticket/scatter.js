@@ -4,7 +4,7 @@ function drawScatterChart(data, xparam, yparam) {
   data.forEach(function(d) {
     d.x = +d[xparam];
     d.y = +d[yparam];
-    d.testver = d.testver;
+    d.title = d.title;
   });
 
   var margin = {top: 20, right: 15, bottom: 60, left: 60}
@@ -39,7 +39,7 @@ function drawScatterChart(data, xparam, yparam) {
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<span style='color:red'>" + d.testver + "</span>";
+    return "<span style='color:red'>" + d.title + "</span>";
   })
 
   main.append('g')
@@ -57,7 +57,7 @@ function drawScatterChart(data, xparam, yparam) {
   .attr('class', 'main axis date')
   .call(yAxis);
 
-  var color = d3.scale.category20();
+  var color = d3.scale.category20c();
 
   var g = main.append("svg:g");
   g.selectAll("scatter-dots")
@@ -66,7 +66,7 @@ function drawScatterChart(data, xparam, yparam) {
   .attr("cx", function (d, i) { return x(d.x); } )
   .attr("cy", function (d) { return y(d.y); } )
   .attr("r", 8)
-  .style("fill", function (d) { return color(d.testver); })
+  .style("fill", function (d) { return color(d.title); })
   .on('mouseover', tip.show)
   .on('mouseout', tip.hide);
 
@@ -83,7 +83,7 @@ function drawScatterChart(data, xparam, yparam) {
   .attr("x", width - 100)
   .attr("width", 18)
   .attr("height", 18)
-  .style("fill", function (d) { return color(d.testver); });
+  .style("fill", function (d) { return color(d.title); });
 
   // draw legend text
   legend.append("text")
@@ -92,6 +92,6 @@ function drawScatterChart(data, xparam, yparam) {
   .attr("dy", ".35em")
   .style("text-anchor", "end")
   .text(function(d) {
-   return d.testver;
+   return d.title;
  })
 };

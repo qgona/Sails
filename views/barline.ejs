@@ -1,0 +1,92 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+<style type="text/css">
+
+	.axis path,
+	.axis line {
+		fill: none;
+		stroke: #000;
+		shape-rendering: crispEdges;
+	}
+
+	.line {
+		fill: none;
+		stroke: steelblue;
+		stroke-width: 1.5px;
+	}
+
+	.axis text {
+		fill:black;
+		shape-rendering: crispEdges;
+	}
+
+	rect {
+		opacity : 0.95;
+		fill : #83d8ff;
+	}
+
+	path {
+		stroke: #00a0e9;
+		opacity : 0.95;
+	}
+
+	path.linechart {
+		stroke-width : 2;
+	}
+
+	circle {
+		fill: white;
+		stroke: #00a0e9;
+		stroke-width : 2;
+		opacity : 0.95;
+	}
+
+	.tick line {
+		opacity: 0.2;
+	}
+
+	.y1.axis line,
+	.y1.axis path{
+		stroke : #83d8ff;
+	}
+	.y2.axis line,
+	.y2.axis path{
+		stroke: #00a0e9;
+	}
+
+	.tooltip {
+		border: 1px solid #eee;
+		background-color: #fff;
+		padding: 8px 8px 0 8px;
+		border-radius: 3px;
+		color : #222;
+		font-size: 120%;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+	}
+	.tooltip dt {
+		background: #ddd;
+		padding: 8px 8px 12px 8px;
+		border-radius: 3px;
+	}
+	.tooltip dd {
+		padding: 16px;
+		text-align: center;
+	}
+</style>
+
+<div id="graph"></div>
+<script src="/js/ticket/barline.js"></script>
+<script>
+	$(document).ready(function() {
+		$.ajax({
+			type:"POST",
+			url: '/categorytracker'
+		}).then(
+			function (data) {
+				DrawBarLine(data.category);
+			},
+			function () {
+				alert("読み込み失敗");
+			}
+		);
+	});
+</script>

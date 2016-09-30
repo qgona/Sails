@@ -29,7 +29,7 @@
     $(document).ready(function() {
       $.ajax({
         type:"POST",
-        url: '/allactivity'
+        url: '/activityscatter'
       }).then(
         function (data) {
           drawScatterChart(data.activity, "開発作業", "テスト");

@@ -12,7 +12,7 @@ class TicketController extends base.BaseController {
   member(req, res) {
     // super.GetDistinctList(res, Ticket, "member");
     var job = require('../../services/redmine.js');
-    job.getData();
+    job.registMember();
   }
 
   tracker(req, res): () => void {
@@ -64,6 +64,50 @@ class TicketController extends base.BaseController {
         function(err, result) {
           if (err) return res.serverError(err);
           res.ok(result);
+        })
+    })
+    return;
+  }
+
+  bugmember(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [{
+          "$group": {
+            "_id": "$bugmember",
+            "total": { "$sum": 1 }
+          }
+        }],
+        function(err, result) {
+          if (err) return res.serverError(err);
+          res.ok(result);
+        })
+    })
+    return;
+  }
+
+  deziebyuser(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [
+        {
+          $match: {
+            "author" : "Dezie Cybouzu"
+          }
+        },
+        {
+          $group: {
+            "_id": "$deziecreateuser",
+            "total": { "$sum": 1 }
+          }
+        }
+        ],
+        function(err, result) {
+          if (err) return res.serverError(err);
+
+          var results = new Object();
+          results['dezieusser'] = result;
+          res.ok(results);
         })
     })
     return;
@@ -227,6 +271,224 @@ class TicketController extends base.BaseController {
         }
         )
     })
+  }
+
+  findall(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [
+
+        { $match: { bugver: { $ne: ""} } },
+        { $match: { bugver: { $ne: null} } },
+        {
+          $lookup: {
+            from: 'member',
+            localField: 'bugmember',
+            foreignField: '_id',
+            as: 'user'
+          }
+        }
+        ],
+        function(err, results) {
+          if (err) return res.serverError(err);
+
+          var result = new Object();
+          result['activity'] = results;
+          res.ok(result);
+        }
+        )
+    });
+    return;
+  }
+
+  bugbyMember(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [
+        { $match: { bugmember: { $ne: ""} } },
+        { $match: { bugmember: { $ne: null} } },
+        {
+          $lookup: {
+            from: 'member',
+            localField: 'bugmember',
+            foreignField: 'memberid',
+            as: 'user'
+          }
+        },
+        { $unwind: "$user" },
+        {
+          $lookup: {
+            from: 'version',
+            localField: 'bugver',
+            foreignField: 'version',
+            as: 'ver'
+          }
+        },
+        { $unwind: "$ver" },
+        {
+          $project: {
+            member: "$user.name",
+            version: "$ver.name",
+            subject: 1,
+            bugver: 1,
+            bugreason: 1,
+            bugarea: 1,
+            bugkind: 1
+          }
+        },
+        {
+          $group: {
+            "_id":  { member: "$member", bugreason: "$bugreason"},
+            "total": { "$sum": 1 }
+          }
+        },
+        { $sort : { _id : -1} },
+        {
+          $project: {
+            _id: 0,
+            member: "$_id.member",
+            bugreason: "$_id.bugreason",
+            total: 1
+
+          }
+        }
+        ],
+        function(err, result) {
+          if (err) return res.serverError(err);
+
+          var results = {};
+          var bugreason = new Array();
+          for (var i = 0; i < result.length; i++) {
+            var temp = result[i];
+            if (temp.member in results) {
+              results[temp.member]['values'][temp.bugreason] = temp.total;
+            } else {
+              results[temp.member] = {};
+              results[temp.member]['values'] = {};
+              results[temp.member]['values'][temp.bugreason] = temp.total;
+            }
+            if (bugreason.indexOf(temp.bugreason) < 0) {
+              bugreason.push(temp.bugreason);
+            }
+          }
+          for (var member in results) {
+            var temp = results[member]['values'];
+            for (var i = 0; i < bugreason.length; ++i) {
+              var key = bugreason[i];
+              if (!(key in temp)) {
+                temp[key] = 0;
+              }
+            }
+            results[member]['values'] = temp;
+          }
+          var response = new Array();
+          for (var member in results) {
+            results[member]['values']["title"] = member;
+            response.push(results[member]['values']);
+          }
+          var respond = new Object();
+          respond['bug'] = response;
+          res.ok(respond);
+        }
+        )
+    });
+    return;
+  }
+
+  bugbyCategory(req, res): () => void {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [
+
+          { $match: { bugmember: { $ne: ""} } },
+          { $match: { bugmember: { $ne: null} } },
+          {
+            $lookup: {
+                from: 'member',
+                localField: 'bugmember',
+                foreignField: 'memberid',
+                as: 'user'
+            }
+          },
+          { $unwind: "$user" },
+          {
+            $lookup: {
+                from: 'version',
+                localField: 'bugver',
+                foreignField: 'version',
+                as: 'ver'
+            }
+          },
+          { $unwind: "$ver" },
+          {
+            $project: {
+                member: "$user.name",
+                version: "$ver.name",
+                category: 1,
+                bugver: 1,
+                bugreason: 1,
+                bugarea: 1,
+                bugkind: 1
+
+            }
+          },
+          {
+              $group: {
+                "_id":  { category: "$category", bugreason: "$bugreason"},
+                "total": { "$sum": 1 }
+              }
+          },
+          { $sort : { _id : -1} },
+          {
+            $project: {
+                _id: 0,
+                category: "$_id.category",
+                bugreason: "$_id.bugreason",
+                total: 1
+
+            }
+          },
+        ],
+        function(err, result) {
+          if (err) return res.serverError(err);
+
+          var results = {};
+          var bugreason = new Array();
+          for (var i = 0; i < result.length; i++) {
+            var temp = result[i];
+            if (temp.category in results) {
+              results[temp.category]['values'][temp.bugreason] = temp.total;
+            } else {
+              results[temp.category] = {};
+              results[temp.category]['values'] = {};
+              results[temp.category]['values'][temp.bugreason] = temp.total;
+            }
+            if (bugreason.indexOf(temp.bugreason) < 0) {
+              bugreason.push(temp.bugreason);
+            }
+          }
+          for (var category in results) {
+            var temp = results[category]['values'];
+            for (var i = 0; i < bugreason.length; ++i) {
+              var key = bugreason[i];
+              if (!(key in temp)) {
+                temp[key] = 0;
+              }
+            }
+            results[category]['values'] = temp;
+          }
+          var response = new Array();
+          for (var category in results) {
+            results[category]['values']["title"] = category;
+            response.push(results[category]['values']);
+          }
+          var respond = new Object();
+          respond['bug'] = response;
+          res.ok(respond);
+        }
+        )
+    });
+    return;
   }
 }
 export = new TicketController();

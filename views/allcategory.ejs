@@ -1,0 +1,82 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+
+<style type="text/css">
+body {
+    font-size: 11px;
+}
+svg {
+    float: left;
+}
+
+div#yearDiv {
+    float: left;
+    width: 250px;
+    font-size: 12px;
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    -moz-column-width: 80;
+    -webkit-column-width: 80;
+}
+
+div#yearDiv ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+div#yearDiv ul li {
+    width: 80px;
+}
+
+div#radioDiv {
+    clear: both;
+    float: left;
+    font-size: 12px;
+}
+
+div#detailDataDiv {
+    float: left;
+    font-size: 15px;
+    margin-left : 30px;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+#yearCheckUl li {
+    list-style-type: none;
+}
+</style>
+
+<div id="yearDiv">
+  <ul id="yearCheckUl"></ul>
+  <button id="yearChange">Change</button>
+  <hr>
+  <input type="checkbox" id="checkAll"><label for="checkAll">All/None</label><br>
+  <input type="checkbox" id="checkDefault"><label for="checkDefault">Default</label>
+</div>
+<div id="radioDiv">
+  <input type="radio" id="radioRaw" name="graphType" value="raw" /><label for="radioRaw">raw</label>
+  <input type="radio" id="radioNormalized" name="graphType" value="normalized" /><label for="radioNormalized">normalized</label>
+</div>
+<div id="detailDataDiv"></div>
+
+<script src="/js/ticket/draw.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      type:"POST",
+      url: '/bugbycategory'
+    }).then(
+      function (data) {
+        drawStackedChart(data.bug);
+      },
+      function () {
+        alert("読み込み失敗");
+      }
+    );
+  });
+</script>

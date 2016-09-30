@@ -32,149 +32,45 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'main'
-  },
+  '/allcategory'  : { view: 'category' },
+  '/allmember'    : { view: 'allmember' },
+  '/alltracker'   : { view: 'alltracker' },
+  '/barcharts'    : { view: 'barcharts' },
+  '/barline'      : { view: 'barline' },
+  '/bugcategory'  : { view: 'allcategory' },
+  '/line'         : { view: 'line' },
+  '/multidonuts'  : { view: 'multidonuts' },
+  '/scatter'      : { view: 'scatter' },
+  '/stacked'      : { view: 'stacked' },
+  '/trackerver'   : { view: 'trackerver' },
+  '/version'      : { view: 'version' },
 
-  '/activity': {
-    controller: 'js/activity',
-    action: 'regist'
-  },
+  '/active'   : { controller: 'js/time', action: 'active' },
+  '/activity' : { controller: 'js/activity', action: 'regist' },
+  '/activityarea' : { controller: 'js/time', action: 'activityarea' },
+  '/activitylist' : { controller: 'js/time', action: 'activitylist' },
+  '/activityscatter' : { controller: 'js/activity', action: 'scatter' },
+  '/allactivity' : { controller: 'js/activity', action: 'findall' },
+  '/bugbycategory' : { controller: 'js/ticket', action: 'bugbycategory' },
+  '/bugbymember' : { controller: 'js/ticket', action: 'bugbymember' },
+  '/bugdensity': { controller: 'js/ticket', action: 'bugdensity' },
+  '/category' : { controller: 'js/category', action: 'category' },
+  '/categoryall' : { controller: 'js/category', action: 'findall' },
+  '/categoryalltracker' : { controller: 'js/category', action: 'findalltracker' },
+  '/categorytracker' : { controller: 'js/category', action: 'findtracker' },
+  '/circle'   : { controller: 'js/time', action: 'circle' },
+  '/commit' : { controller: 'js/commit', action: 'all' },
+  '/deziebyuser' : { controller: 'js/ticket', action: 'deziebyuser' },
+  '/kinds'    : { controller: 'js/master', action: 'kinds' },
+  '/lines' : { controller: 'js/commit', action: 'lines' },
+  '/member' : { controller: 'js/ticket', action: 'member' },
+  '/months'   : { controller: 'js/master', action: 'months' },
+  '/testver' : { controller: 'js/ticket', action: 'testver' },
+  '/tracker': { controller: 'js/ticket', action: 'tracker' },
+  '/tracker/:testver' : { controller: 'js/ticket', action: 'tracker' },
+  '/tracker/testver/:testver' : { controller: 'js/ticket', action: 'trackerbytestver' },
+  '/trackver' : { controller: 'js/ticket', action: 'trackver' },
 
-  '/multidonuts': {
-    view: 'multidonuts'
-  },
-
-  '/allcategory': {
-    view: 'category'
-  },
-
-  '/version': {
-    view: 'version'
-  },
-
-  '/scatter': {
-    view: 'scatter'
-  },
-
-  '/lines': {
-    controller: 'js/commit',
-    action: 'lines'
-  },
-
-  '/allactivity': {
-    controller: 'js/activity',
-    action: 'findall'
-  },
-
-  '/categorytracker': {
-    controller: 'js/category',
-    action: 'findall'
-  },
-
-  '/commit': {
-    controller: 'js/commit',
-    action: 'all'
-  },
-
-  '/tracker/:testver': {
-    controller: 'js/ticket',
-    action: 'tracker'
-  },
-
-  '/tracker/testver/:testver': {
-    controller: 'js/ticket',
-    action: 'trackerbytestver'
-  },
-
-  '/testver': {
-    controller: 'js/ticket',
-    action: 'testver'
-  },
-
-  '/member': {
-    controller: 'js/ticket',
-    action: 'member'
-  },
-
-  '/tracker': {
-    controller: 'js/ticket',
-    action: 'tracker'
-  },
-
-  '/activityarea': {
-    controller: 'js/time',
-    action: 'activityarea'
-  },
-
-  '/multiactivity': {
-    controller: 'js/time',
-    action: 'multiactivity'
-  },
-
-  '/activitylist': {
-    controller: 'js/time',
-    action: 'activitylist'
-  },
-
-  '/active': {
-    controller: 'js/time',
-    action: 'active'
-  },
-
-  '/category': {
-    controller: 'js/category',
-    action: 'category'
-  },
-
-  '/circle': {
-    controller: 'js/time',
-    action: 'circle'
-  },
-
-  '/trackver': {
-    controller: 'js/ticket',
-    action: 'trackver'
-  },
-
-  '/months': {
-    controller: 'js/master',
-    action: 'months'
-  },
-
-  '/kinds': {
-    controller: 'js/master',
-    action: 'kinds'
-  },
-
-  '/bugdensity': {
-    controller: 'js/ticket',
-    action: 'bugdensity'
-  },
-
-  '/trackerver': {
-    view: 'trackerver'
-  },
-
-  '/stacked': {
-    view: 'stacked'
-  },
-
-  '/circled': {
-    view: 'circled'
-  },
-
-  '/line': {
-    view: 'line'
-  },
-
-  '/bar': {
-    view: 'bar'
-  },
-
-  '/index': {
-    view: 'index'
-  },
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
