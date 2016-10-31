@@ -52,7 +52,6 @@
 	.y2.axis path{
 		stroke: #00a0e9;
 	}
-
 	.tooltip {
 		border: 1px solid #eee;
 		background-color: #fff;
@@ -64,29 +63,53 @@
 	}
 	.tooltip dt {
 		background: #ddd;
-		padding: 8px 8px 12px 8px;
 		border-radius: 3px;
 	}
 	.tooltip dd {
-		padding: 16px;
 		text-align: center;
 	}
+	detailDataDiv {
+    	top: 0;
+    }
 </style>
-
-<div id="graph"></div>
+<version>Loading....</version>
+<div id="graph" />
+<div id="radioDiv">
+  <input type="radio" id="radioDay" name="graphType" value="day" checked="checked"/><label for="radioDay">日別</label>
+  <input type="radio" id="radioTotal" name="graphType" value="total" /><label for="radioTotal">合計</label>
+  <input type="radio" id="radioBugRate" name="graphType" value="bugrate" /><label for="radioBugRate">バグ数/時間</label>
+  <input type="radio" id="radioTimeRate" name="graphType" value="timerate" /><label for="radioTimeRate">時間/バグ数</label>
+</div>
 <script src="/js/ticket/barline.js"></script>
 <script>
 	$(document).ready(function() {
 		$.ajax({
 			type:"POST",
-			url: '/categorytracker'
+			url: '/bugversion/99999'
 		}).then(
 			function (data) {
-				DrawBarLine(data.category);
+				DrawBarLine(data.bug);
 			},
 			function () {
 				alert("読み込み失敗");
 			}
 		);
 	});
+</script>
+
+<script>
+	System.config({
+		map: {
+        rxjs: 'node_modules/rxjs' // added this map section
+    },
+    packages: {
+    	app: {
+    		format: 'register',
+    		defaultExtension: 'js'
+    	},
+          'rxjs': {defaultExtension: 'js'} // and added this to packages
+      }
+  });
+	System.import('/app/compornents/version/main')
+	.then(null, console.error.bind(console));
 </script>

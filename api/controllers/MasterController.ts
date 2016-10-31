@@ -38,6 +38,31 @@ class MasterController {
     return;
   }
 
+  version(req, res): () => void {
+  	Version.native(function(err, collection) {
+  		collection.aggregate(
+	        [
+    	      {
+	            $project: {
+    	          value : "$version",
+        	      "name": 1,
+	              "_id": 0
+    	        },
+        	  },
+        	  {
+        	  	$sort: { name : 1 }
+        	  }
+	        ],
+	        function(err, results) {
+    	    	if (err) return res.serverError(err);
+        		res.ok(results);
+        	}
+        )
+    });
+  	return;
+  }
+
+
   kind(req, res): () => void {
   	var result = {};
 	var kyes = {};

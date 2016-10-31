@@ -1,5 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
 
+<input type="date" class="datepicker">
+
 <div id="graph" width="100%" ></div>
 
 <script src="/js/ticket/line.js"></script>
@@ -18,4 +20,10 @@
 			}
 		);
 	});
+
+	$('.datepicker').pickadate({
+		format: 'yyyy/mmmm/d',
+    	selectMonths: true, // Creates a dropdown to control month
+    	selectYears: 15 // Creates a dropdown of 15 years to control year
+  	});
 </script>

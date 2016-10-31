@@ -3,7 +3,6 @@ declare var $: any;
 class Redmine  {
 
   getData() {
-
     var version = {
       offset : 0,  //ページ数
       limit : 100,  //ページあたり表示数
@@ -11,13 +10,13 @@ class Redmine  {
       total : 0  //データ合計数
     };
     //バージョン破棄
-    dropVersion()
-    .then(function () {
+    this.dropVersion()
+    .then(() => {
       //バージョン取得
-      insertVersion(version)
-      .then(function () {
+      this.insertVersion(version)
+      .then(() => {
         //チケット取得
-        // getTicketTime();
+        this.getTicketTime();
       });
     });
   }
@@ -30,16 +29,16 @@ class Redmine  {
       total : 0
     };
 
-    dropMember()
-    .then(function () {
-      insertMember(member)
-      .then(function () {
+    this.dropMember()
+    .then(() => {
+      this.insertMember(member)
+      .then(() => {
       });
     });
   }
 
 
-  export function dropVersion():Promise<any> {
+  dropVersion():Promise<any> {
     return new Promise((resolve,reject) => {
       Version.native(function(err, collection) {
         collection.drop(function(err, response) {
@@ -50,25 +49,24 @@ class Redmine  {
     });
   }
 
-  export function insertVersion(param):Promise<any> {
+  insertVersion(param):Promise<any> {
     return new Promise((resolve,reject) => {
       sails.log('start');
-
       sails.log('offset:' + param.offset);
       sails.log('total:' + param.total);
       if (param.offset > param.total) {
         sails.log('end');
         return;
       }
-      getVersion(param)
-      .then(function () {
-        insertVersion(param);
+      this.getVersion(param)
+      .then(() => {
+        this.insertVersion(param);
         resolve();
       });
     });
   }
 
-  export function getVersion(param):Promise<any> {
+  getVersion(param):Promise<any> {
     return new Promise((resolve,reject) => {
       var http = require('http');
       var options = {
@@ -79,20 +77,20 @@ class Redmine  {
       };
       sails.log(options.path);
 
-      http.request(options, function(response) {
+      http.request(options, (response) => {
         var responseData = '';
         response.setEncoding('utf8');
-        response.on('data', function(data){
+        response.on('data', (data) => {
           responseData += data;
         });
-        response.once('error', function(err){
+        response.once('error', (err) => {
           reject(err);
         });
-        response.on('end', function(){
+        response.on('end', () => {
           try {
             var data = JSON.parse(responseData);
             param.total = data.total_count;
-            addVersion(param, data);
+            this.addVersion(param, data);
             resolve();
           } catch (e) {
             sails.log(e);
@@ -100,15 +98,16 @@ class Redmine  {
           }
         });
       }).end();
+      resolve();
     });
   }
 
-  export function addVersion(param, data) {
+  addVersion(param, data) {
     try {
       var verArray = new Array();
       for (var i = 0; i < data.versions.length; i++){
         var version = new Object();
-        setVersion(version, data.versions[i]);
+        this.setVersion(version, data.versions[i]);
         verArray.push(version);
       }
 
@@ -124,7 +123,7 @@ class Redmine  {
     }
   }
 
-  export Object function setVersion(dest, src) {
+  setVersion(dest, src): Object {
     dest.version = String(src.id);
     dest.name = src.name;
     dest.project = src.project.name;
@@ -146,20 +145,13 @@ class Redmine  {
     return dest;
   }
 
-  export function getTicketTime() {
-
+  getTicketTime() {
     var ticket = {
       offset : 0,  //ページ数
       limit : 100,  //ページあたり表示数
       count : 0,  //データ取得数
       total : 0  //データ合計数
     };
-
-    dropTicket()
-    .then(function () {
-      insertTicket(ticket);
-    });
-
     var time = {
       offset : 0,  //ページ数
       limit : 100,  //ページあたり表示数
@@ -167,39 +159,51 @@ class Redmine  {
       total : 0  //データ合計数
     };
 
-    dropTime()
-    .then(function () {
-      insertTime(time);
+    this.dropTicket()
+    .then(() => {
+      this.insertTicket(ticket)
+      .then(() => {
+        this.dropTime()
+        .then(() => {
+          this.insertTime(time)
+          .then(() => {
+            this.insertTime(time);
+          });
+        });
+      });
     });
   }
 
-  export function insertTicket(param) {
-    sails.log('start');
-
-    sails.log('offset:' + param.offset);
-    sails.log('total:' + param.total);
-    if (param.offset > param.total) {
-      sails.log('end');
-      return;
-    }
-    getTicket(param)
-    .then(function () {
-      insertTicket(param);
+  insertTicket(param):Promise<any> {
+    return new Promise((resolve,reject) => {
+      var that = this;
+      sails.log('start');
+      sails.log('offset:' + param.offset);
+      sails.log('total:' + param.total);
+      if (param.offset > param.total) {
+        sails.log('end');
+        return;
+      }
+      this.getTicket(param)
+      .then(() => {
+        this.insertTicket(param);
+      });
+      resolve();
     });
   }
 
-  export function dropTicket():Promise<any> {
+  dropTicket():Promise<any> {
     return new Promise((resolve,reject) => {
       Ticket.native(function(err, collection) {
         collection.drop(function(err, response) {
-          sails.log('drop');
+          sails.log('drop ticket');
           resolve();
         });
       });
     });
   }
 
-  export function getTicket(param):Promise<any> {
+  getTicket(param):Promise<any> {
     return new Promise((resolve,reject) => {
       var http = require('http');
       var options = {
@@ -210,20 +214,20 @@ class Redmine  {
       };
       sails.log(options.path);
 
-      http.request(options, function(response) {
+      http.request(options, (response) => {
         var responseData = '';
         response.setEncoding('utf8');
-        response.on('data', function(data){
+        response.on('data', (data) => {
           responseData += data;
         });
-        response.once('error', function(err){
+        response.once('error', (err) => {
           reject(err);
         });
-        response.on('end', function(){
+        response.on('end', () => {
           try {
             var data = JSON.parse(responseData);
             param.total = data.total_count;
-            addTicket(param, data);
+            this.addTicket(param, data);
             resolve();
           } catch (e) {
             sails.log(e);
@@ -231,15 +235,16 @@ class Redmine  {
           }
         });
       }).end();
+      resolve();
     });
   }
 
-  export function addTicket(param, data) {
+  addTicket(param, data) {
     try {
       var ticketArray = new Array();
       for (var i = 0; i < data.issues.length; i++){
         var ticket = new Object();
-        setTicket(ticket, data.issues[i]);
+        this.setTicket(ticket, data.issues[i]);
         ticketArray.push(ticket);
       }
 
@@ -255,7 +260,7 @@ class Redmine  {
     }
   }
 
-  export Object function setTicket(dest, src) {
+  setTicket(dest, src): Object {
     dest.ticket = src.id;
     dest.subject = src.subject;
     if (src.assigned_to != null && src.assigned_to.name != null) {
@@ -320,7 +325,11 @@ class Redmine  {
         dest.isalready = field.value;
         break;
         case 44:
-        dest.sp = field.value;
+        if (dest.sp != "") {
+          dest.sp = 0;
+        } else {
+          dest.sp = Number(field.value);
+        }
         break;
         case 5:
         dest.bugmember = field.value;
@@ -348,33 +357,36 @@ class Redmine  {
     return dest;
   }
 
-  export function insertTime(param) {
-    sails.log('start');
-
-    sails.log('offset:' + param.offset);
-    sails.log('total:' + param.total);
-    if (param.offset > param.total) {
-      sails.log('end');
-      return;
-    }
-    getTime(param)
-    .then(function () {
-      insertTime(param)
+  insertTime(param):Promise<any> {
+    return new Promise((resolve,reject) => {
+      var that = this;
+      sails.log('start');
+      sails.log('offset:' + param.offset);
+      sails.log('total:' + param.total);
+      if (param.offset > param.total) {
+        sails.log('end');
+        return;
+      }
+      this.getTime(param)
+      .then(() => {
+        this.insertTime(param)
+      });
+      resolve();
     });
   }
 
-  export function dropTime():Promise<any> {
+  dropTime():Promise<any> {
     return new Promise((resolve,reject) => {
       Time.native(function(err, collection) {
         collection.drop(function(err, response) {
-          sails.log('drop');
+          sails.log('drop time');
           resolve();
         });
       });
     });
   }
 
-  export function getTime(param):Promise<any> {
+  getTime(param):Promise<any> {
     return new Promise((resolve,reject) => {
       var http = require('http');
       var options = {
@@ -385,20 +397,20 @@ class Redmine  {
       };
       sails.log(options.path);
 
-      http.request(options, function(response) {
+      http.request(options, (response) => {
         var responseData = '';
         response.setEncoding('utf8');
-        response.on('data', function(data){
+        response.on('data', (data) => {
           responseData += data;
         });
-        response.once('error', function(err){
+        response.once('error', (err) => {
           reject(err);
         });
-        response.on('end', function(){
+        response.on('end', () => {
           try {
             var data = JSON.parse(responseData);
             param.total = data.total_count;
-            addTime(param, data);
+            this.addTime(param, data);
             resolve();
           } catch (e) {
             sails.log(e);
@@ -406,15 +418,16 @@ class Redmine  {
           }
         });
       }).end();
+      resolve();
     });
   }
 
-  export function addTime(param, data) {
+  addTime(param, data) {
     try {
       var timeArray = new Array();
       for (var i = 0; i < data.time_entries.length; i++){
         var time = new Object();
-        setTime(time, data.time_entries[i]);
+        this.setTime(time, data.time_entries[i]);
         timeArray.push(time);
       }
 
@@ -430,7 +443,7 @@ class Redmine  {
     }
   }
 
-  export Object function setTime(dest, src) {
+  setTime(dest, src): Object {
     dest.activity = src.activity.name;
     dest.user = src.user.name;
     if (src.project != null && src.project.name != null) {
@@ -448,7 +461,7 @@ class Redmine  {
     return dest;
   }
 
-  export function dropMember():Promise<any> {
+  dropMember():Promise<any> {
     return new Promise((resolve,reject) => {
       Member.native(function(err, collection) {
         collection.drop(function(err, response) {
@@ -459,7 +472,7 @@ class Redmine  {
     });
   }
 
-  export function insertMember(param):Promise<any> {
+  insertMember(param):Promise<any> {
     return new Promise((resolve, reject) => {
       sails.log('start');
       sails.log('offset:' + param.offset);
@@ -476,7 +489,7 @@ class Redmine  {
     });
   }
 
-  export function getMember(param):Promise<any> {
+  getMember(param):Promise<any> {
     return new Promise((resolve, reject) => {
       var http = require('http');
       var options = {
@@ -508,17 +521,18 @@ class Redmine  {
           }
         });
       }).end();
+      resolve();
     });
   }
 
-  export function addMember(param, data) {
+  addMember(param, data) {
     try {
       var memberArray = new Array();
       for (var i = 0; i < data.memberships.length; i++){
         var member = new Object();
         var item = data.memberships[i];
         if (!item.user) continue;
-        setMember(member, data.memberships[i]);
+        this.setMember(member, data.memberships[i]);
         memberArray.push(member);
       }
 
@@ -536,10 +550,34 @@ class Redmine  {
     }
   }
 
-  export Object function setMember(dest, src) {
+  setMember(dest, src): Object {
     dest.memberid = String(src.user.id);
     dest.name = src.user.name;
     return dest;
+  }
+
+  insertTicketTime() {
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+        [
+          {
+            $lookup: {
+            from: 'time',
+            localField: 'id',
+            foreignField: 'id',
+            as: 'times'}
+          },
+          { $unwind: "$times" }
+        ],
+        function(err, result) {
+          if (err) return res.serverError(err);
+          for (var i = 0; i < result.length; i++) {
+            TicketTime.create(result[i]).exec(function(err, tickettime) {});
+          }
+        }
+      )
+    })
+    return;
   }
 }
 export = new Redmine();

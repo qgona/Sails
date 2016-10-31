@@ -12,7 +12,14 @@ class TicketController extends base.BaseController {
   member(req, res) {
     // super.GetDistinctList(res, Ticket, "member");
     var job = require('../../services/redmine.js');
-    job.registMember();
+    job.getData();
+  }
+
+  //メンバー
+  registcommit(req, res) {
+    // super.GetDistinctList(res, Ticket, "member");
+    var job = require('../../services/git.js');
+    job.getData();
   }
 
   tracker(req, res): () => void {
@@ -90,17 +97,12 @@ class TicketController extends base.BaseController {
     Ticket.native(function(err, collection) {
       collection.aggregate(
         [
-        {
-          $match: {
-            "author" : "Dezie Cybouzu"
+          { $match: { "author" : "Dezie Cybouzu" } },
+          { $group: {
+              "_id": "$deziecreateuser",
+              "total": { "$sum": 1 }
+            }
           }
-        },
-        {
-          $group: {
-            "_id": "$deziecreateuser",
-            "total": { "$sum": 1 }
-          }
-        }
         ],
         function(err, result) {
           if (err) return res.serverError(err);
@@ -117,8 +119,8 @@ class TicketController extends base.BaseController {
     Ticket.native(function(err, collection) {
       collection.aggregate(
         [
-        {
-          $lookup: {
+          {
+            $lookup: {
             from: 'time',
             localField: 'id',
             foreignField: 'id',
@@ -255,21 +257,20 @@ class TicketController extends base.BaseController {
 
   findTwo(req, res) {
     Ticket.native(function(err, collection) {
-
       collection.aggregate(
         [
-        {
-          "$group": {
-            "_id": "$subject",
-            "total": { "$sum": 1 }
+          {
+            "$group": {
+              "_id": "$subject",
+              "total": { "$sum": 1 }
+            }
           }
-        }
         ],
         function(err, result) {
           if (err) return res.serverError(err);
           res.ok(result);
         }
-        )
+      )
     })
   }
 
@@ -277,17 +278,16 @@ class TicketController extends base.BaseController {
     Ticket.native(function(err, collection) {
       collection.aggregate(
         [
-
-        { $match: { bugver: { $ne: ""} } },
-        { $match: { bugver: { $ne: null} } },
-        {
-          $lookup: {
-            from: 'member',
-            localField: 'bugmember',
-            foreignField: '_id',
-            as: 'user'
+          { $match: { bugver: { $ne: ""} } },
+          { $match: { bugver: { $ne: null} } },
+          {
+            $lookup: {
+              from: 'member',
+              localField: 'bugmember',
+              foreignField: '_id',
+              as: 'user'
+            }
           }
-        }
         ],
         function(err, results) {
           if (err) return res.serverError(err);
@@ -400,54 +400,53 @@ class TicketController extends base.BaseController {
       collection.aggregate(
         [
 
-          { $match: { bugmember: { $ne: ""} } },
-          { $match: { bugmember: { $ne: null} } },
-          {
-            $lookup: {
-                from: 'member',
-                localField: 'bugmember',
-                foreignField: 'memberid',
-                as: 'user'
-            }
-          },
-          { $unwind: "$user" },
-          {
-            $lookup: {
-                from: 'version',
-                localField: 'bugver',
-                foreignField: 'version',
-                as: 'ver'
-            }
-          },
-          { $unwind: "$ver" },
-          {
-            $project: {
-                member: "$user.name",
-                version: "$ver.name",
-                category: 1,
-                bugver: 1,
-                bugreason: 1,
-                bugarea: 1,
-                bugkind: 1
+        { $match: { bugmember: { $ne: ""} } },
+        { $match: { bugmember: { $ne: null} } },
+        {
+          $lookup: {
+            from: 'member',
+            localField: 'bugmember',
+            foreignField: 'memberid',
+            as: 'user'
+          }
+        },
+        { $unwind: "$user" },
+        {
+          $lookup: {
+            from: 'version',
+            localField: 'bugver',
+            foreignField: 'version',
+            as: 'ver'
+          }
+        },
+        { $unwind: "$ver" },
+        {
+          $project: {
+            member: "$user.name",
+            version: "$ver.name",
+            category: 1,
+            bugver: 1,
+            bugreason: 1,
+            bugarea: 1,
+            bugkind: 1
+          }
+        },
+        {
+          $group: {
+            "_id":  { category: "$category", bugreason: "$bugreason"},
+            "total": { "$sum": 1 }
+          }
+        },
+        { $sort : { _id : -1} },
+        {
+          $project: {
+            _id: 0,
+            category: "$_id.category",
+            bugreason: "$_id.bugreason",
+            total: 1
 
-            }
-          },
-          {
-              $group: {
-                "_id":  { category: "$category", bugreason: "$bugreason"},
-                "total": { "$sum": 1 }
-              }
-          },
-          { $sort : { _id : -1} },
-          {
-            $project: {
-                _id: 0,
-                category: "$_id.category",
-                bugreason: "$_id.bugreason",
-                total: 1
-
-            }
-          },
+          }
+        },
         ],
         function(err, result) {
           if (err) return res.serverError(err);
@@ -487,6 +486,221 @@ class TicketController extends base.BaseController {
           res.ok(respond);
         }
         )
+    });
+    return;
+  }
+
+  bugversion(req, res): () => void {
+    var param = req.param("version", "");
+
+    var arr = new Array();
+    arr =
+    [
+        { $lookup: {
+            from: 'time',
+            localField: 'ticket',
+            foreignField: 'ticket',
+            as: 'times' }
+        },
+        { $unwind: "$times" },
+        { $project : {
+            _id : 0,
+            ticket : 1,
+            date : {
+              $concat: [
+                { "$substr": [ { "$year": "$times.date" }, 0, 4 ] },
+                '/',
+                { "$cond": [
+                  { "$lte": [ { "$month": "$times.date" }, 9 ] },
+                    { "$concat": [
+                      "0",
+                      { "$substr": [ { "$month": "$times.date" }, 0, 2 ] },
+                    ]},
+                  { "$substr": [ { "$month": "$times.date" }, 0, 2 ] }
+                ]},
+                '/',
+                { "$cond": [
+                  { "$lte": [ { "$dayOfMonth": "$times.date" }, 9 ] },
+                    { "$concat": [
+                      "0",
+                      { "$substr": [ { "$dayOfMonth": "$times.date" }, 0, 2 ] },
+                    ]},
+                  { "$substr": [ { "$dayOfMonth": "$times.date" }, 0, 2 ] }
+                ]}
+              ]
+            },
+            activity : "$times.activity",
+            time : "$times.hours",
+            tracker : 1 }
+        },
+        { $match: { activity : "テスト" } },
+        { $sort : { date : 1} }
+    ];
+
+    if (param != 'all') {
+      arr.unshift({ $match: { testver : param } });
+    }
+
+    Ticket.native(function(err, collection) {
+      collection.aggregate(
+      arr,
+      function(err, result_time) {
+        if (err) return res.serverError(err);
+
+        var subarr = new Array();
+        subarr =
+        [
+            { $match: { tracker : "出荷前バグ" } },
+            { $project : {
+                _id : 0,  ticket : 1,
+                date : {
+                  $concat: [
+                    { "$substr": [ { "$year": "$created_on" }, 0, 4 ] },
+                    '/',
+                    { "$cond": [
+                      { "$lte": [ { "$month": "$created_on" }, 9 ] },
+                        { "$concat": [
+                          "0",
+                          { "$substr": [ { "$month": "$created_on" }, 0, 2 ] },
+                        ]},
+                      { "$substr": [ { "$month": "$created_on" }, 0, 2 ] }
+                    ]},
+                    '/',
+                    { "$cond": [
+                      { "$lte": [ { "$dayOfMonth": "$created_on" }, 9 ] },
+                        { "$concat": [
+                          "0",
+                          { "$substr": [ { "$dayOfMonth": "$created_on" }, 0, 2 ] },
+                        ]},
+                      { "$substr": [ { "$dayOfMonth": "$created_on" }, 0, 2 ] }
+                    ]}
+                  ]
+                }
+              }
+            },
+            { $sort : { date : 1} }
+        ];
+        if (param != 'all') {
+          subarr.unshift({ $match: { testver : param } });
+        }
+
+        Ticket.native(function(err, collection) {
+          collection.aggregate(
+          subarr,
+          function(err, result_ticket) {
+            if (err) return res.serverError(err);
+
+            var arrDate = new Array();
+            var tickets = {};
+            for (var i = 0; i < result_ticket.length; i++) {
+              var temp = result_ticket[i];
+              arrDate.push(new Date(temp.date + ' 00:00:00'));
+              if (temp.date in tickets) {
+                tickets[temp.date]['Y2'] += 1;
+              } else {
+                tickets[temp.date] = {};
+                tickets[temp.date]['Y2'] = 1;
+              }
+            }
+
+            var results = {};
+            for (var i = 0; i < result_time.length; i++) {
+              var temp = result_time[i];
+              arrDate.push(new Date(temp.date + ' 00:00:00'));
+              if (temp.date in result_time) {
+                results[temp.date]['Y1'] += temp.time;
+              } else {
+                results[temp.date] = {};
+                results[temp.date]['X'] = temp.date;
+                results[temp.date]['Y1'] = temp.time;
+              }
+            }
+
+            for (var date in tickets) {
+              if (!(date in results)) {
+                results[date] = {};
+                results[date]['Y1'] = 0;
+              }
+              results[date]['X'] = date;
+              results[date]['Y2'] = tickets[date]['Y2'];
+            }
+
+            for (var date in results) {
+              if (!(date in tickets)) {
+                results[date]['Y2'] = 0;
+              }
+            }
+
+            var maxDate = new Date(Math.max.apply(null, arrDate));
+            var minDate = new Date(Math.min.apply(null, arrDate));
+            var valDate = minDate;
+            while (valDate.getTime() < maxDate.getTime()) {
+                valDate.setDate(valDate.getDate() + 1);
+                var year = String(valDate.getFullYear());
+                var month = String(valDate.getMonth() + 1);
+                if (month.length == 1) {
+                  month = '0' + month;
+                }
+                var day =  String(valDate.getDate());
+                if (day.length == 1) {
+                  day = '0' + day;
+                }
+                var strDate = [year, month, day].join( '/' );
+                if (!(strDate in results)) {
+                  results[strDate] = {};
+                  results[strDate]['X'] = strDate;
+                  results[temp.date]['Y1'] = 0;
+                  results[temp.date]['Y2'] = 0;
+                }
+            }
+
+            var response = new Array();
+            for (var date in results) {
+              response.push(results[date]);
+            }
+
+            response.sort(function(a, b){
+              if(a.X < b.X) return -1;
+              if(a.X > b.X) return 1;
+              return 0;
+            });
+
+            var ticket = 0;
+            var time = 0;
+            for (var i = 0; i < response.length; i++) {
+              if (response[i]['Y2']) {
+                ticket += response[i]['Y2'];
+              } else {
+                response[i]['Y2'] = 0;
+              }
+              response[i]['Y2TOTAL'] = ticket;
+
+              if (response[i]['Y1']) {
+                time += response[i]['Y1'];
+              } else {
+                response[i]['Y1'] = 0;
+              }
+              response[i]['Y1TOTAL'] = time;
+            }
+
+            for (var i = 0; i < response.length; i++) {
+              if (response[i]['Y1TOTAL'] == "0") {
+                response[i]['Y2P'] = 0;
+              } else {
+                response[i]['Y2P'] = response[i]['Y2TOTAL'] / response[i]['Y1TOTAL'];
+              }
+              if (response[i]['Y2TOTAL'] == "0") {
+                response[i]['Y1P'] = 0;
+              } else {
+                response[i]['Y1P'] = response[i]['Y1TOTAL'] / response[i]['Y2TOTAL'];
+              }
+            }
+            var respond = new Object();
+            respond['bug'] = response;
+            res.ok(respond);
+          })
+        });
+      })
     });
     return;
   }

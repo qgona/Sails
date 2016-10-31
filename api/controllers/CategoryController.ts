@@ -144,6 +144,7 @@ class CategoryController extends base.BaseController {
         [
           {
             $project: {
+              "total": 1,
               "values": 1,
               "title": 1,
               "_id":0
@@ -153,7 +154,8 @@ class CategoryController extends base.BaseController {
             $match: {
               "title": {$ne:null}
             }
-          }
+          },
+          { $sort : { total : -1 } }
         ],
         function(err, results) {
           if (err) return res.serverError(err);
@@ -169,7 +171,6 @@ class CategoryController extends base.BaseController {
             delete temp.values;
             results[i] = temp;
           }
-
           var result = new Object();
           result['category'] = results;
           res.ok(result);

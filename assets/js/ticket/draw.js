@@ -1,7 +1,7 @@
 //折れ線グラフ
 function drawStackedChart(data) {
 
-    var margin = { top: 20, right: 120, bottom: 30, left: 40 };
+    var margin = { top: 20, right: 120, bottom: 40, left: 40 };
     var width = 1400 - margin.left - margin.right;
     var height = 800 - margin.top - margin.bottom;
 
@@ -82,7 +82,8 @@ function drawStackedChart(data) {
         .attr('type', 'checkbox')
         .attr('id', title)
         .attr('class', 'yearCheck');
-        li.append('text')
+        li.append('label')
+        .attr('for', title)
         .text(title);
     });
 
@@ -251,11 +252,10 @@ function drawStackedChart(data) {
         var checked = d3.select('#checkDefault').property('checked');
         if (checked) {
             d3.selectAll('.yearCheck').property('checked', false);
-            // 新しい方から30年のみチェックする
             var inputArray = d3.selectAll('.yearCheck');
             var length = inputArray[0].length;
             inputArray.each(function(d, i) {
-                if (i > length - 11) {
+                if (i > length - 31) {
                     d3.select(this).property('checked', true);
                 }
             });

@@ -82,6 +82,22 @@ class CommitController {
 		return;
 	}
 
+	updateall(req, res): () => void {
+		Commit.find().exec(function (err, records) {
+			for (var i = 0; i < records.length; i++) {
+				var temp = records[i];
+				var datetime = temp.committer.date + 32400;
+
+				Commit.update({id: temp.id}, {"committer.date": datetime }).exec(function afterwards(err, updated){
+				  if (err) {
+				    return;
+				  }
+				});
+			}
+		});
+		return;
+	}
+
 	prepare(req, res): () => void {
 		Commit.native(function(err, collection) {
 			collection.aggregate(
@@ -243,6 +259,56 @@ class CommitController {
 						if (a.date > b.date) return 1;
 						return 0;
 					});
+					res.ok(results);
+				}
+			)
+		})
+		return;
+	}
+
+	commitlist(req, res): () => void {
+
+		Commit.native(function(err, collection) {
+			collection.aggregate(
+		            [
+		                { $unwind: "$changes" },
+		                { $match : { "date" : { "$gte" : new Date("2016-09-01T00:00:00+09:00"), "$lte" : new Date("2016-10-01T00:00:00+09:00") } }},
+		                {
+		                    $project: {
+		                        "message": 1,
+		                        "date": "$date",
+		                        "fname": "$changes.fname",
+		                        "add": "$changes.add",
+		                        "del": "$changes.del",
+		                        "_id": 0
+		                    }
+		                },
+		                {
+		                    $group: {
+		                        _id: "$fname",
+		                        "total": { "$sum": 1 },
+		                        "add": { "$sum": "$add" },
+		                        "del": { "$sum": "$del" }
+		                    }
+		                },
+		                {
+		                    $project: {
+		                    	"_id": 0,
+		                        "file": "$_id",
+		                        "value": "$total"
+		                    }
+		                }
+		    	],
+				function(err, result) {
+					if (err) return res.serverError(err);
+
+					var results = new Array();
+					for (var i = 0; i < result.length; i++) {
+						if ((typeof result[i].file) !== "string") {
+							continue;
+						}
+						results.push(result[i]);
+					}
 					res.ok(results);
 				}
 			)
